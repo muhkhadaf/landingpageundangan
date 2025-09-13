@@ -30,26 +30,7 @@ const About = () => {
     }
   ];
 
-  const team = [
-    {
-      name: "Sarah Wijaya",
-      role: "Creative Director",
-      description: "Spesialis desain undangan dengan pengalaman 8+ tahun",
-      color: "emerald"
-    },
-    {
-      name: "Michael Chen",
-      role: "Hantaran Specialist",
-      description: "Ahli dalam menciptakan hantaran unik dan berkesan",
-      color: "yellow"
-    },
-    {
-      name: "Rina Sari",
-      role: "Customer Relations",
-      description: "Memastikan setiap detail sesuai dengan keinginan klien",
-      color: "emerald"
-    }
-  ];
+
 
   return (
     <section id="about" className="py-20 bg-gradient-to-b from-emerald-50 to-white">
@@ -179,7 +160,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -194,7 +175,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -209,7 +190,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Tim yang sangat profesional dan responsif. Hasil akhir melebihi ekspektasi kami!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Tim yang sangat profesional dan responsif. Hasil akhir melebihi ekspektasi kami!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -224,7 +205,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Proses pemesanan mudah dan hasilnya sangat memuaskan. Highly recommended!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Proses pemesanan mudah dan hasilnya sangat memuaskan. Highly recommended!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -239,7 +220,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Kualitas undangan premium dengan harga yang terjangkau. Terima kasih atas pelayanan terbaiknya!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Kualitas undangan premium dengan harga yang terjangkau. Terima kasih atas pelayanan terbaiknya!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -254,7 +235,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Detail yang sangat diperhatikan dan hasil yang sempurna. Pernikahan kami jadi tak terlupakan!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Detail yang sangat diperhatikan dan hasil yang sempurna. Pernikahan kami jadi tak terlupakan!&rdquo;</p>
             </div>
             
             {/* Duplicate for seamless loop */}
@@ -270,7 +251,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!&rdquo;</p>
             </div>
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
@@ -285,7 +266,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">"Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!"</p>
+              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!&rdquo;</p>
             </div>
           </div>
         </div>

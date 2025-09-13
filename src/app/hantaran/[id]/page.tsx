@@ -164,7 +164,7 @@ const HantaranDetailPage = () => {
                 <div className="bg-white/90 backdrop-blur-sm rounded-lg p-8 shadow-lg text-center max-w-[280px]">
                   <Gift className="h-12 w-12 text-yellow-600 mx-auto mb-4" fill="currentColor" />
                   <h3 className="font-bold text-yellow-800 text-lg mb-2">Hantaran Mewah</h3>
-                  <p className="text-sm text-gray-600 mb-3">{hantaran.items[selectedPackage]} Dulang</p>
+                  <p className="text-sm text-gray-600 mb-3">{hantaran.items[selectedPackage as keyof typeof hantaran.items]} Dulang</p>
                   <div className="flex justify-center items-center gap-1 mb-4">
                     <Star className="h-4 w-4 text-yellow-500" fill="currentColor" />
                     <span className="text-sm font-semibold">{hantaran.rating}</span>
@@ -179,7 +179,7 @@ const HantaranDetailPage = () => {
                 
                 {/* Items Count */}
                 <div className="absolute top-4 right-4 bg-white/90 text-yellow-800 px-4 py-2 rounded-lg font-semibold">
-                  {hantaran.items[selectedPackage]} Items
+                  {hantaran.items[selectedPackage as keyof typeof hantaran.items]} Items
                 </div>
               </div>
             </div>
@@ -268,7 +268,7 @@ const HantaranDetailPage = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Isi Paket</h3>
               <div className="grid grid-cols-1 gap-2">
-                {hantaran.contents[selectedPackage].map((content, index) => (
+                {hantaran.contents[selectedPackage as keyof typeof hantaran.contents].map((content, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-yellow-600" />
                     <span className="text-gray-700">{content}</span>

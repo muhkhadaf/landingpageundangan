@@ -4,9 +4,17 @@ import { Eye, ShoppingCart, Heart, X, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+interface Template {
+  id: number;
+  title: string;
+  category: string;
+  price: string;
+  image: string;
+}
+
 const TemplateSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
 
   const packages = [
     {

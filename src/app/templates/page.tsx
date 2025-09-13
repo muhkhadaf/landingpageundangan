@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, Eye, ShoppingCart, Heart, Grid, List } from 'lucide-react';
+import { Search, Eye, ShoppingCart, Heart, Grid, List } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';

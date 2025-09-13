@@ -102,7 +102,7 @@ const BlogDetailPage = () => {
     // Add more blog posts as needed
   };
 
-  const currentPost = blogPosts[params.id as string];
+  const currentPost = blogPosts[params.id as keyof typeof blogPosts];
 
   if (!currentPost) {
     return (

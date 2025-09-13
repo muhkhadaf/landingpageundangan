@@ -226,7 +226,7 @@ const TemplateDetailPage = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Fitur yang Termasuk</h3>
               <div className="grid grid-cols-1 gap-2">
-                {template.features[selectedPackage].map((feature, index) => (
+                {template.features[selectedPackage as keyof typeof template.features].map((feature, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-emerald-600" />
                     <span className="text-gray-700">{feature}</span>
