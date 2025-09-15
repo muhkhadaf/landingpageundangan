@@ -4,114 +4,59 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { Eye, Gift, Grid, List, Package, Search, ShoppingCart, Star } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+interface Hantaran {
+  id: number;
+  name: string;
+  category: string;
+  price: string | number;
+  items?: string;
+  rating?: number;
+  image_url?: string;
+  description?: string;
+  ingredients?: string[];
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
 
 const HantaranPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
   const [viewMode, setViewMode] = useState('grid');
+  const [hantaranPackages, setHantaranPackages] = useState<Hantaran[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const hantaranPackages = [
-    {
-      id: 1,
-      title: "Paket Hantaran Mewah",
-      category: "Premium",
-      price: 2500000,
-      priceText: "Rp 2.500.000",
-      image: "bg-gradient-to-br from-yellow-200 to-amber-300",
-      description: "Paket hantaran premium dengan 9 dulang berisi makanan dan buah-buahan pilihan",
-      items: 9,
-      rating: 4.9,
-      features: ["9 Dulang", "Buah Premium", "Makanan Tradisional", "Dekorasi Mewah"]
-    },
-    {
-      id: 2,
-      title: "Paket Hantaran Klasik",
-      category: "Traditional",
-      price: 1800000,
-      priceText: "Rp 1.800.000",
-      image: "bg-gradient-to-br from-emerald-200 to-green-300",
-      description: "Paket hantaran tradisional dengan sentuhan klasik yang elegan",
-      items: 7,
-      rating: 4.8,
-      features: ["7 Dulang", "Kue Tradisional", "Buah Segar", "Dekorasi Klasik"]
-    },
-    {
-      id: 3,
-      title: "Paket Hantaran Modern",
-      category: "Modern",
-      price: 2200000,
-      priceText: "Rp 2.200.000",
-      image: "bg-gradient-to-br from-purple-200 to-indigo-300",
-      description: "Paket hantaran dengan desain modern dan contemporary",
-      items: 8,
-      rating: 4.7,
-      features: ["8 Dulang", "Dessert Modern", "Fruit Arrangement", "Modern Design"]
-    },
-    {
-      id: 4,
-      title: "Paket Hantaran Ekonomis",
-      category: "Budget",
-      price: 1200000,
-      priceText: "Rp 1.200.000",
-      image: "bg-gradient-to-br from-blue-200 to-cyan-300",
-      description: "Paket hantaran terjangkau namun tetap berkualitas dan menarik",
-      items: 5,
-      rating: 4.6,
-      features: ["5 Dulang", "Kue Pilihan", "Buah Lokal", "Dekorasi Simple"]
-    },
-    {
-      id: 5,
-      title: "Paket Hantaran Royal",
-      category: "Luxury",
-      price: 3500000,
-      priceText: "Rp 3.500.000",
-      image: "bg-gradient-to-br from-pink-200 to-rose-300",
-      description: "Paket hantaran super mewah dengan kualitas terbaik dan presentasi istimewa",
-      items: 11,
-      rating: 5.0,
-      features: ["11 Dulang", "Premium Items", "Luxury Packaging", "Royal Decoration"]
-    },
-    {
-      id: 6,
-      title: "Paket Hantaran Minimalis",
-      category: "Modern",
-      price: 1500000,
-      priceText: "Rp 1.500.000",
-      image: "bg-gradient-to-br from-gray-200 to-slate-300",
-      description: "Paket hantaran dengan konsep minimalis yang clean dan elegan",
-      items: 6,
-      rating: 4.5,
-      features: ["6 Dulang", "Clean Design", "Quality Items", "Minimalist Style"]
-    },
-    {
-      id: 7,
-      title: "Paket Hantaran Vintage",
-      category: "Traditional",
-      price: 2000000,
-      priceText: "Rp 2.000.000",
-      image: "bg-gradient-to-br from-amber-200 to-orange-300",
-      description: "Paket hantaran dengan nuansa vintage dan sentuhan nostalgia",
-      items: 7,
-      rating: 4.8,
-      features: ["7 Dulang", "Vintage Style", "Traditional Snacks", "Antique Decoration"]
-    },
-    {
-      id: 8,
-      title: "Paket Hantaran Exclusive",
-      category: "Premium",
-      price: 2800000,
-      priceText: "Rp 2.800.000",
-      image: "bg-gradient-to-br from-teal-200 to-cyan-300",
-      description: "Paket hantaran eksklusif dengan item-item pilihan dan kemasan premium",
-      items: 9,
-      rating: 4.9,
-      features: ["9 Dulang", "Exclusive Items", "Premium Packaging", "Custom Design"]
-    }
-  ];
+  // Fetch hantaran data from API
+  useEffect(() => {
+    const fetchHantaran = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/hantaran');
+        if (!response.ok) {
+          throw new Error('Gagal memuat data hantaran');
+        }
+        const result = await response.json();
+        setHantaranPackages(result.data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Gagal memuat data hantaran');
+        console.error('Error fetching hantaran:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const categories = ['All', 'Premium', 'Traditional', 'Modern', 'Budget', 'Luxury'];
+    fetchHantaran();
+  }, []);
+
+
+
+  // Generate categories dynamically from API data
+  const categories = ['All', ...Array.from(new Set(hantaranPackages.map(pkg => pkg.category).filter(Boolean)))];
+  
   const priceRanges = [
     { label: 'All', value: 'All' },
     { label: 'Under 1.5M', value: 'under-1500' },
@@ -120,14 +65,15 @@ const HantaranPage = () => {
   ];
 
   const filteredPackages = hantaranPackages.filter(pkg => {
-    const matchesSearch = pkg.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (pkg.description && pkg.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'All' || pkg.category === selectedCategory;
     
     let matchesPrice = true;
-    if (priceRange === 'under-1500') matchesPrice = pkg.price < 1500000;
-    else if (priceRange === '1500-2500') matchesPrice = pkg.price >= 1500000 && pkg.price <= 2500000;
-    else if (priceRange === 'above-2500') matchesPrice = pkg.price > 2500000;
+    const priceValue = typeof pkg.price === 'string' ? parseFloat(pkg.price.replace(/[^0-9]/g, '')) : pkg.price;
+    if (priceRange === 'under-1500') matchesPrice = priceValue < 1500000;
+    else if (priceRange === '1500-2500') matchesPrice = priceValue >= 1500000 && priceValue <= 2500000;
+    else if (priceRange === 'above-2500') matchesPrice = priceValue > 2500000;
     
     return matchesSearch && matchesCategory && matchesPrice;
   });
@@ -209,115 +155,168 @@ const HantaranPage = () => {
         </div>
       </section>
 
-      {/* Packages Grid/List */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          {filteredPackages.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-gray-400 mb-4">
-                <Package className="h-16 w-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">Tidak ada paket ditemukan</h3>
-              <p className="text-gray-500">Coba ubah filter atau kata kunci pencarian Anda</p>
-            </div>
-          ) : (
-            <div className={viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
-              : "space-y-6"
-            }>
-              {filteredPackages.map((pkg) => (
-                <div 
-                  key={pkg.id}
-                  className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group ${
-                    viewMode === 'list' ? 'flex' : ''
-                  }`}
-                >
-                  {/* Package Preview */}
-                  <div className={`relative overflow-hidden ${
-                    viewMode === 'list' ? 'w-80 h-64' : 'h-64'
-                  }`}>
-                    <div className={`w-full h-full ${pkg.image} flex items-center justify-center relative`}>
-                      {/* Mock hantaran preview */}
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 shadow-lg text-center max-w-[200px]">
-                        <Gift className="h-8 w-8 text-yellow-600 mx-auto mb-2" fill="currentColor" />
-                        <h3 className="font-bold text-yellow-800 text-sm mb-1">Hantaran</h3>
-                        <p className="text-xs text-gray-600 mb-2">{pkg.items} Dulang</p>
-                        <div className="flex justify-center items-center gap-1 mb-2">
-                          <Star className="h-3 w-3 text-yellow-500" fill="currentColor" />
-                          <span className="text-xs font-semibold">{pkg.rating}</span>
-                        </div>
-                        <div className="w-full h-1 bg-gradient-to-r from-yellow-400 to-amber-400 rounded"></div>
-                      </div>
-                      
-                      {/* Category Badge */}
-                      <div className="absolute top-4 left-4 bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {pkg.category}
-                      </div>
-                      
-                      {/* Items Count Badge */}
-                      <div className="absolute top-4 right-4 bg-white/90 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
-                        {pkg.items} Items
-                      </div>
-                      
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="text-white text-center">
-                          <Eye className="h-8 w-8 mx-auto mb-2" />
-                          <p className="text-sm font-semibold">Preview Paket</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+      {/* Loading State */}
+      {loading && (
+        <section className="py-12">
+          <div className="container mx-auto px-4 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat paket hantaran...</p>
+          </div>
+        </section>
+      )}
 
-                  {/* Package Info */}
-                  <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-xl font-bold text-yellow-800">{pkg.title}</h3>
-                      <div className="flex items-center gap-1 text-yellow-500">
-                        <Star className="h-4 w-4" fill="currentColor" />
-                        <span className="text-sm font-semibold">{pkg.rating}</span>
+      {/* Error State */}
+      {error && (
+        <section className="py-12">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-red-600 mb-4">Error: {error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Packages Grid/List */}
+      {!loading && !error && (
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            {filteredPackages.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-gray-400 mb-4">
+                  <Package className="h-16 w-16 mx-auto" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">Tidak ada paket ditemukan</h3>
+                <p className="text-gray-500">Coba ubah filter atau kata kunci pencarian Anda</p>
+              </div>
+            ) : (
+              <div className={viewMode === 'grid' 
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
+                : "space-y-6"
+              }>
+                {filteredPackages.map((pkg) => (
+                  <div 
+                    key={pkg.id}
+                    className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group ${
+                      viewMode === 'list' ? 'flex' : ''
+                    }`}
+                  >
+                    {/* Package Preview */}
+                    <div className={`relative overflow-hidden ${
+                      viewMode === 'list' ? 'w-80 h-64' : 'h-64'
+                    }`}>
+                      <div className={`w-full h-full ${pkg.image_url ? '' : 'bg-gradient-to-br from-yellow-200 to-amber-300'} flex items-center justify-center relative`} style={pkg.image_url ? {backgroundImage: `url(${pkg.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}>
+                        {/* Mock hantaran preview */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 shadow-lg text-center max-w-[200px]">
+                          <Gift className="h-8 w-8 text-yellow-600 mx-auto mb-2" fill="currentColor" />
+                          <h3 className="font-bold text-yellow-800 text-sm mb-1">Hantaran</h3>
+                          <p className="text-xs text-gray-600 mb-2">{pkg.items || 'Paket'}</p>
+                          {pkg.rating && (
+                            <div className="flex justify-center items-center gap-1 mb-2">
+                              <Star className="h-3 w-3 text-yellow-500" fill="currentColor" />
+                              <span className="text-xs font-semibold">{pkg.rating}</span>
+                            </div>
+                          )}
+                          <div className="w-full h-1 bg-gradient-to-r from-yellow-400 to-amber-400 rounded"></div>
+                        </div>
+                        
+                        {/* Category Badge */}
+                        <div className="absolute top-4 left-4 bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          {pkg.category}
+                        </div>
+                        
+                        {/* Items Badge */}
+                        {pkg.items && (
+                          <div className="absolute top-4 right-4 bg-white/90 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            {pkg.items}
+                          </div>
+                        )}
+                        
+                        {/* Availability Badge */}
+                        {pkg.is_active !== undefined && (
+                          <div className={`absolute bottom-4 right-4 px-3 py-1 rounded-full text-sm font-semibold ${
+                            pkg.is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                          }`}>
+                            {pkg.is_active ? 'Tersedia' : 'Habis'}
+                          </div>
+                        )}
+                        
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="text-white text-center">
+                            <Eye className="h-8 w-8 mx-auto mb-2" />
+                            <p className="text-sm font-semibold">Preview Paket</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    
-                    <p className="text-gray-600 mb-3 text-sm">{pkg.description}</p>
-                    
-                    {/* Features */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {pkg.features.map((feature, index) => (
-                        <span key={index} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <p className="text-2xl font-bold text-yellow-600">{pkg.priceText}</p>
-                      <div className="flex items-center gap-1 text-gray-500 text-sm">
-                        <Package className="h-4 w-4" />
-                        <span>{pkg.items} Dulang</span>
+
+                    {/* Package Info */}
+                    <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="text-xl font-bold text-yellow-800">{pkg.name}</h3>
+                        {pkg.rating && (
+                          <div className="flex items-center gap-1 text-yellow-500">
+                            <Star className="h-4 w-4" fill="currentColor" />
+                            <span className="text-sm font-semibold">{pkg.rating}</span>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <button className="flex-1 bg-gradient-to-r from-yellow-600 to-yellow-500 text-white px-4 py-3 rounded-lg font-semibold hover:from-yellow-700 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        <ShoppingCart className="h-4 w-4" />
-                        Beli Sekarang
-                      </button>
-                      <Link href={`/hantaran/${pkg.id}`}>
-                        <button className="border-2 border-yellow-600 text-yellow-600 px-4 py-3 rounded-lg font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                          <Eye className="h-4 w-4" />
-                          Detail
+                      
+                      <p className="text-gray-600 mb-3 text-sm">{pkg.description || 'Paket hantaran berkualitas dengan berbagai pilihan item menarik.'}</p>
+                      
+                      {/* Ingredients as Features */}
+                      {pkg.ingredients && pkg.ingredients.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {pkg.ingredients.slice(0, 3).map((ingredient, index) => (
+                            <span key={index} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">
+                              {ingredient}
+                            </span>
+                          ))}
+                          {pkg.ingredients.length > 3 && (
+                            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">
+                              +{pkg.ingredients.length - 3} lainnya
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-2xl font-bold text-yellow-600">
+                          {typeof pkg.price === 'string' ? pkg.price : `Rp ${pkg.price?.toLocaleString('id-ID')}`}
+                        </p>
+                        {pkg.items && (
+                          <div className="flex items-center gap-1 text-gray-500 text-sm">
+                            <Package className="h-4 w-4" />
+                            <span>{pkg.items}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex gap-3">
+                        <button className="flex-1 bg-gradient-to-r from-yellow-600 to-yellow-500 text-white px-4 py-3 rounded-lg font-semibold hover:from-yellow-700 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                          <ShoppingCart className="h-4 w-4" />
+                          Beli Sekarang
                         </button>
-                      </Link>
+                        <Link href={`/hantaran/${pkg.id}`}>
+                          <button className="border-2 border-yellow-600 text-yellow-600 px-4 py-3 rounded-lg font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                            <Eye className="h-4 w-4" />
+                            Detail
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <Footer />
     </div>

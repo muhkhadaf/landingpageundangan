@@ -2,106 +2,126 @@
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { Check, Eye, Heart, Share2, ShoppingCart, Star } from 'lucide-react';
+import { Check, Eye, Heart, Share2, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+interface TemplateData {
+  id: number;
+  title: string;
+  category: string;
+  price: string | number;
+  image_url?: string;
+  description?: string;
+  is_active?: boolean;
+  specifications?: Record<string, string>;
+  created_at?: string;
+  updated_at?: string;
+}
 
 const TemplateDetailPage = () => {
   const params = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedPackage, setSelectedPackage] = useState('basic');
+  const [template, setTemplate] = useState<TemplateData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data - in real app, this would be fetched based on params.id
-  const template = {
-    id: params.id,
-    title: "Elegant Garden",
-    category: "Modern",
-    rating: 4.8,
-    reviews: 127,
-    price: {
-      basic: 150000,
-      premium: 250000,
-      ultimate: 350000
-    },
-    description: "Template undangan pernikahan modern dengan sentuhan alam yang elegan. Desain ini menggabungkan keindahan alam dengan kemewahan modern, menciptakan undangan yang sempurna untuk hari bahagia Anda.",
-    features: {
-      basic: [
-        "Responsive Design",
-        "Custom Colors",
-        "Basic Animation",
-        "RSVP Form",
-        "Location Map"
-      ],
-      premium: [
-        "Responsive Design",
-        "Custom Colors",
-        "Advanced Animation",
-        "RSVP Form",
-        "Location Map",
-        "Music Player",
-        "Photo Gallery",
-        "Love Story Timeline"
-      ],
-      ultimate: [
-        "Responsive Design",
-        "Custom Colors",
-        "Premium Animation",
-        "RSVP Form",
-        "Location Map",
-        "Music Player",
-        "Photo Gallery",
-        "Love Story Timeline",
-        "Guest Book",
-        "Live Streaming",
-        "Custom Domain",
-        "Analytics Dashboard"
-      ]
-    },
-    specifications: {
-      "Compatibility": "All devices (Mobile, Tablet, Desktop)",
-      "Loading Speed": "< 3 seconds",
-      "Customization": "Full color and text customization",
-      "Support": "24/7 customer support",
-      "Delivery": "Instant after payment",
-      "Updates": "Free lifetime updates"
-    },
-    images: [
-      "bg-gradient-to-br from-emerald-200 to-green-300",
-      "bg-gradient-to-br from-emerald-300 to-teal-400",
-      "bg-gradient-to-br from-green-200 to-emerald-300",
-      "bg-gradient-to-br from-teal-200 to-emerald-300"
-    ],
-    demoUrl: "#",
-    tags: ["Modern", "Elegant", "Nature", "Responsive", "Animated"]
-  };
+  // Fetch template data from API
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/templates/${params.id}`);
+        if (!response.ok) {
+          throw new Error('Template not found');
+        }
+        const result = await response.json();
+        setTemplate(result.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load template');
+        console.error('Error fetching template:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const packages = [
-    {
-      id: 'basic',
-      name: 'Basic',
-      price: template.price.basic,
-      priceText: 'Rp 150.000',
-      description: 'Paket dasar dengan fitur-fitur essential',
-      popular: false
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      price: template.price.premium,
-      priceText: 'Rp 250.000',
-      description: 'Paket lengkap dengan fitur advanced',
-      popular: true
-    },
-    {
-      id: 'ultimate',
-      name: 'Ultimate',
-      price: template.price.ultimate,
-      priceText: 'Rp 350.000',
-      description: 'Paket premium dengan semua fitur terbaru',
-      popular: false
+    if (params.id) {
+      fetchTemplate();
     }
+  }, [params.id]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat detail template...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">Error: {error}</p>
+            <div className="space-x-4">
+              <Link href="/templates" className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                Kembali ke Template
+              </Link>
+              <button 
+                onClick={() => window.location.reload()}
+                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+              >
+                Coba Lagi
+              </button>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // No data state
+  if (!template) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">Template tidak ditemukan</p>
+            <Link href="/templates" className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+              Kembali ke Template
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Default images for gallery
+  const defaultImages = [
+    'bg-gradient-to-br from-emerald-200 to-green-300',
+    'bg-gradient-to-br from-emerald-300 to-teal-400',
+    'bg-gradient-to-br from-green-200 to-emerald-300',
+    'bg-gradient-to-br from-teal-200 to-emerald-300'
   ];
+
+  // Use template image or default images
+  const displayImages = template.image_url ? [template.image_url, ...defaultImages.slice(1)] : defaultImages;
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -126,7 +146,7 @@ const TemplateDetailPage = () => {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative overflow-hidden rounded-2xl shadow-lg group">
-              <div className={`w-full h-96 ${template.images[selectedImage]} flex items-center justify-center relative`}>
+              <div className={`w-full h-96 ${displayImages[selectedImage]} flex items-center justify-center relative`} style={template?.image_url && selectedImage === 0 ? {backgroundImage: `url(${template.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}>
                 {/* Mock invitation preview */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-lg p-8 shadow-lg text-center max-w-[280px]">
                   <Heart className="h-12 w-12 text-emerald-600 mx-auto mb-4" fill="currentColor" />
@@ -148,7 +168,7 @@ const TemplateDetailPage = () => {
             
             {/* Thumbnail Images */}
             <div className="grid grid-cols-4 gap-3">
-              {template.images.map((image, index) => (
+              {displayImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -156,7 +176,10 @@ const TemplateDetailPage = () => {
                     selectedImage === index ? 'ring-2 ring-emerald-500 ring-offset-2' : 'hover:opacity-80'
                   }`}
                 >
-                  <div className={`w-full h-full ${image}`}></div>
+                  <div 
+                    className={`w-full h-full ${typeof image === 'string' && image.startsWith('bg-') ? image : ''}`}
+                    style={typeof image === 'string' && image.startsWith('http') ? {backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}
+                  ></div>
                 </button>
               ))}
             </div>
@@ -170,55 +193,57 @@ const TemplateDetailPage = () => {
                 <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-semibold">
                   {template.category}
                 </span>
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 text-yellow-500" fill="currentColor" />
-                  <span className="font-semibold">{template.rating}</span>
-                  <span className="text-gray-500 text-sm">({template.reviews} reviews)</span>
-                </div>
               </div>
               <h1 className="text-3xl font-bold text-emerald-800 mb-3">{template.title}</h1>
-              <p className="text-gray-600 leading-relaxed">{template.description}</p>
+              <p className="text-gray-600 leading-relaxed">{template.description || 'Template undangan pernikahan modern dengan desain yang elegan dan responsif.'}</p>
+              
+              {/* Price Display */}
+              <div className="bg-emerald-50 p-4 rounded-lg">
+                <p className="text-2xl font-bold text-emerald-800">
+                  {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                </p>
+                <p className="text-sm text-emerald-600">Harga sudah termasuk customization</p>
+              </div>
             </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2">
-              {template.tags.map((tag, index) => (
-                <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
+            {/* Template Info */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3">Informasi Template</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Kategori:</span>
+                  <span className="font-medium">{template.category}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Status:</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    template.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {template.is_active ? 'Aktif' : 'Tidak Aktif'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Kompatibilitas:</span>
+                  <span className="font-medium">Semua Device</span>
+                </div>
+              </div>
             </div>
 
-            {/* Package Selection */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Pilih Paket</h3>
-              <div className="space-y-3">
-                {packages.map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-300 ${
-                      selectedPackage === pkg.id
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-emerald-300'
-                    }`}
-                    onClick={() => setSelectedPackage(pkg.id)}
-                  >
-                    {pkg.popular && (
-                      <div className="absolute -top-2 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                        Most Popular
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold text-gray-800">{pkg.name}</h4>
-                        <p className="text-sm text-gray-600">{pkg.description}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-emerald-600">{pkg.priceText}</p>
-                      </div>
-                    </div>
+            {/* Template Package */}
+            <div className="bg-gradient-to-r from-emerald-50 to-emerald-100 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Paket Template</h3>
+              <div className="bg-white rounded-lg p-4 border-2 border-emerald-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-gray-800">Paket Lengkap</h4>
+                    <p className="text-sm text-gray-600">Template siap pakai dengan customization</p>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-emerald-600">
+                      {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -226,7 +251,16 @@ const TemplateDetailPage = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Fitur yang Termasuk</h3>
               <div className="grid grid-cols-1 gap-2">
-                {template.features[selectedPackage as keyof typeof template.features].map((feature, index) => (
+                {[
+                  'Template responsif untuk semua device',
+                  'Customization nama pengantin',
+                  'Galeri foto unlimited',
+                  'Musik background',
+                  'RSVP online',
+                  'Live streaming integration',
+                  'Google Maps lokasi',
+                  'Support 24/7'
+                ].map((feature, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-emerald-600" />
                     <span className="text-gray-700">{feature}</span>
@@ -239,7 +273,7 @@ const TemplateDetailPage = () => {
             <div className="space-y-4">
               <button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 <ShoppingCart className="h-5 w-5" />
-                Beli Sekarang - {packages.find(p => p.id === selectedPackage)?.priceText}
+                Beli Sekarang - {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
               </button>
               
               <div className="flex gap-3">
@@ -257,19 +291,21 @@ const TemplateDetailPage = () => {
         </div>
 
         {/* Specifications */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-800 mb-8">Spesifikasi Produk</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(template.specifications).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-                  <span className="font-semibold text-gray-700">{key}</span>
-                  <span className="text-gray-600">{value}</span>
-                </div>
-              ))}
+        {template.specifications && Object.keys(template.specifications).length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8">Spesifikasi Produk</h2>
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Object.entries(template.specifications).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+                    <span className="font-semibold text-gray-700">{key}</span>
+                    <span className="text-gray-600">{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Related Templates */}
         <div className="mt-16">

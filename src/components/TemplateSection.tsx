@@ -2,19 +2,26 @@
 
 import { Eye, ShoppingCart, Heart, X, Check } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Template {
   id: number;
   title: string;
   category: string;
   price: string;
-  image: string;
+  image_url?: string;
+  description?: string;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const TemplateSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const packages = [
     {
@@ -61,50 +68,40 @@ const TemplateSection = () => {
     }
   ];
 
-  const templates = [
-    {
-      id: 1,
-      title: "Elegant Garden",
-      category: "Modern",
-      price: "Rp 150.000",
-      image: "bg-gradient-to-br from-emerald-200 to-green-300"
-    },
-    {
-      id: 2,
-      title: "Royal Classic",
-      category: "Traditional",
-      price: "Rp 200.000",
-      image: "bg-gradient-to-br from-yellow-200 to-amber-300"
-    },
-    {
-      id: 3,
-      title: "Minimalist Chic",
-      category: "Modern",
-      price: "Rp 125.000",
-      image: "bg-gradient-to-br from-gray-200 to-slate-300"
-    },
-    {
-      id: 4,
-      title: "Floral Romance",
-      category: "Romantic",
-      price: "Rp 175.000",
-      image: "bg-gradient-to-br from-pink-200 to-rose-300"
-    },
-    {
-      id: 5,
-      title: "Vintage Luxury",
-      category: "Vintage",
-      price: "Rp 225.000",
-      image: "bg-gradient-to-br from-amber-200 to-orange-300"
-    },
-    {
-      id: 6,
-      title: "Ocean Breeze",
-      category: "Modern",
-      price: "Rp 160.000",
-      image: "bg-gradient-to-br from-blue-200 to-cyan-300"
-    }
-  ];
+  // Fetch templates from API
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/templates?is_active=true&limit=6');
+        if (!response.ok) {
+          throw new Error('Failed to fetch templates');
+        }
+        const result = await response.json();
+        setTemplates(result.data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load templates');
+        console.error('Error fetching templates:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
+
+  // Fallback gradient colors for templates without images
+  const getGradientClass = (index: number) => {
+    const gradients = [
+      'bg-gradient-to-br from-emerald-200 to-green-300',
+      'bg-gradient-to-br from-yellow-200 to-amber-300',
+      'bg-gradient-to-br from-gray-200 to-slate-300',
+      'bg-gradient-to-br from-pink-200 to-rose-300',
+      'bg-gradient-to-br from-amber-200 to-orange-300',
+      'bg-gradient-to-br from-blue-200 to-cyan-300'
+    ];
+    return gradients[index % gradients.length];
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-emerald-50" id="templates">
@@ -119,9 +116,31 @@ const TemplateSection = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat template...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">Error: {error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        )}
+
         {/* Templates Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
-          {templates.map((template, index) => (
+        {!loading && !error && (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+            {templates.map((template, index) => (
             <div 
               key={template.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
@@ -130,7 +149,7 @@ const TemplateSection = () => {
             >
               {/* Template Preview */}
               <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
-                <div className={`w-full h-full ${template.image} flex items-center justify-center relative`}>
+                <div className={`w-full h-full ${template.image_url ? '' : getGradientClass(index)} flex items-center justify-center relative`} style={template.image_url ? {backgroundImage: `url(${template.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}>
                   {/* Mock invitation preview */}
                   <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 md:p-4 lg:p-6 shadow-lg text-center max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[200px]">
                     <Heart className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 text-emerald-600 mx-auto mb-1 sm:mb-2" fill="currentColor" />
@@ -157,7 +176,9 @@ const TemplateSection = () => {
               {/* Template Info */}
               <div className="p-3 sm:p-4 md:p-5 lg:p-6">
                 <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-emerald-800 mb-1 sm:mb-2">{template.title}</h3>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-yellow-600 mb-2 sm:mb-3 md:mb-4">{template.price}</p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-yellow-600 mb-2 sm:mb-3 md:mb-4">
+                  {typeof template.price === 'string' ? template.price : `Rp ${template.price}`}
+                </p>
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2 sm:gap-3">
@@ -181,7 +202,8 @@ const TemplateSection = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
