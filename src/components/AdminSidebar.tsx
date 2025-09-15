@@ -59,9 +59,25 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
     return pathname.startsWith(item.href);
   };
 
-  const handleLogout = () => {
-    // Add logout logic here
-    window.location.href = '/admin/login';
+  const handleLogout = async () => {
+    try {
+      // Call logout API to clear session
+      await fetch('/api/auth/admin', {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      
+      // Clear localStorage
+      localStorage.removeItem('admin-user');
+      
+      // Redirect to login page
+      window.location.href = '/admin/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if API call fails, still redirect to login
+      localStorage.removeItem('admin-user');
+      window.location.href = '/admin/login';
+    }
   };
 
   return (

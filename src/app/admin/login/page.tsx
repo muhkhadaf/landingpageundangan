@@ -168,11 +168,6 @@ const AdminLogin = () => {
               </button>
             </div>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Default credentials: admin@ayung.com / admin123
-              </p>
-            </div>
           </form>
         </div>
 
