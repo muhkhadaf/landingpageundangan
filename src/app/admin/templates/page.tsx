@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Template } from '@/lib/supabase';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const TemplatesManagement = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -84,6 +86,7 @@ const TemplatesManagement = () => {
   };
 
   const toggleStatus = async (template: Template) => {
+    setActionLoading(`toggle-${template.id}`);
     try {
       const response = await fetch(`/api/templates/${template.id}`, {
         method: 'PUT',
@@ -99,6 +102,8 @@ const TemplatesManagement = () => {
       }
     } catch (error) {
       console.error('Error updating template status:', error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -166,10 +171,7 @@ const TemplatesManagement = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading templates...</p>
-        </div>
+        <LoadingSpinner size="large" message="Loading templates..." />
       </div>
     );
   }
@@ -338,13 +340,19 @@ const TemplatesManagement = () => {
                 <div className="flex justify-between items-center">
                   <button
                     onClick={() => toggleStatus(template)}
-                    className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    disabled={actionLoading === `toggle-${template.id}`}
+                    className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                       template.is_active
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'
                         : 'bg-red-100 text-red-800 hover:bg-red-200'
                     }`}
                   >
-                    {template.is_active ? (
+                    {actionLoading === `toggle-${template.id}` ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                        Updating...
+                      </div>
+                    ) : template.is_active ? (
                       <><Eye className="h-4 w-4 mr-2" /> Active</>
                     ) : (
                       <><EyeOff className="h-4 w-4 mr-2" /> Inactive</>

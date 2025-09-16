@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search, Gift } from 'lucide-react';
+import Link from 'next/link';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { Hantaran } from '@/lib/supabase';
 
 // Interface for actual API response structure
@@ -21,6 +23,7 @@ interface HantaranAPI {
 const HantaranManagement = () => {
   const [hantaran, setHantaran] = useState<HantaranAPI[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -97,6 +100,7 @@ const HantaranManagement = () => {
   };
 
   const toggleAvailability = async (hantaran: HantaranAPI) => {
+    setActionLoading(`toggle-${hantaran.id}`);
     try {
       const response = await fetch(`/api/hantaran/${hantaran.id}`, {
         method: 'PUT',
@@ -112,6 +116,8 @@ const HantaranManagement = () => {
       }
     } catch (error) {
       console.error('Error updating hantaran availability:', error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -160,10 +166,7 @@ const HantaranManagement = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading hantaran...</p>
-        </div>
+        <LoadingSpinner size="large" message="Loading hantaran..." />
       </div>
     );
   }
@@ -322,13 +325,16 @@ const HantaranManagement = () => {
                 <div className="flex justify-between items-center">
                   <button
                     onClick={() => toggleAvailability(item)}
-                    className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    disabled={actionLoading === `toggle-${item.id}`}
+                    className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                       item.is_available
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'
                         : 'bg-red-100 text-red-800 hover:bg-red-200'
                     }`}
                   >
-                    {item.is_available ? (
+                    {actionLoading === `toggle-${item.id}` ? (
+                      <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> Updating...</>
+                    ) : item.is_available ? (
                       <><Eye className="h-4 w-4 mr-2" /> Available</>
                     ) : (
                       <><EyeOff className="h-4 w-4 mr-2" /> Unavailable</>

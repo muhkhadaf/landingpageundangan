@@ -1,20 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import {
+    ChevronLeft,
+    ChevronRight,
+    FileText,
+    Gift,
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    Package,
+    X
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  Package,
-  Gift,
-  FileText,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
+import { useState } from 'react';
 
 interface AdminSidebarProps {
   children: React.ReactNode;
