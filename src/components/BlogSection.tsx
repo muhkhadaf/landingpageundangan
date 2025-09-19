@@ -23,7 +23,7 @@ const BlogSection = () => {
       author: "Sarah Dewi",
       date: "2024-01-12",
       category: "Hantaran",
-      image: "bg-gradient-to-br from-yellow-200 to-amber-300",
+      image: "bg-gradient-to-br from-amber-200 to-amber-300",
       readTime: "7 min",
       views: 980
     },
@@ -34,18 +34,18 @@ const BlogSection = () => {
       author: "Andi Pratama",
       date: "2024-01-10",
       category: "Tips Pernikahan",
-      image: "bg-gradient-to-br from-emerald-200 to-green-300",
+      image: "bg-gradient-to-br from-purple-200 to-purple-300",
       readTime: "6 min",
       views: 1450
     }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-emerald-50">
+    <section className="py-20" style={{background: 'linear-gradient(to bottom, white, #f8f6f7)'}}>
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-emerald-800 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#52303f'}}>
             Artikel & Tips Pernikahan
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -69,13 +69,13 @@ const BlogSection = () => {
               
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs font-semibold">
+                  <span className="px-2 py-1 rounded-full text-xs font-semibold" style={{backgroundColor: '#f3f0f2', color: '#52303f'}}>
                     {post.category}
                   </span>
                   <span className="text-gray-500 text-xs">{post.readTime} baca</span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-emerald-800 mb-3 line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                <h3 className="text-xl font-bold mb-3 line-clamp-2 transition-colors" style={{color: '#52303f'}} onMouseEnter={(e) => {const target = e.target as HTMLHeadingElement; target.style.color = '#7c5367';}} onMouseLeave={(e) => {const target = e.target as HTMLHeadingElement; target.style.color = '#52303f';}}>
                   {post.title}
                 </h3>
                 <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
@@ -92,7 +92,7 @@ const BlogSection = () => {
                 </div>
                 
                 <Link href={`/blog/${post.id}`}>
-                  <button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 flex items-center justify-center gap-2 group">
+                  <button className="w-full text-white py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 group" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}>
                     Baca Artikel
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -105,7 +105,7 @@ const BlogSection = () => {
         {/* View All Button */}
         <div className="text-center">
           <Link href="/blog">
-            <button className="bg-white text-emerald-600 border-2 border-emerald-600 px-8 py-4 rounded-full font-semibold hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl">
+            <button className="bg-white border-2 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" style={{color: '#7c5367', borderColor: '#7c5367'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#7c5367'; target.style.color = 'white';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = 'white'; target.style.color = '#7c5367';}}>
               Lihat Semua Artikel
             </button>
           </Link>

@@ -1,25 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Package, Gift, TrendingUp, Eye } from 'lucide-react';
+import { Package, Eye } from 'lucide-react';
 import Link from 'next/link';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 
 interface Stats {
   totalTemplates: number;
-  totalHantaran: number;
   activeTemplates: number;
-  activeHantaran: number;
 }
 
 const AdminDashboard = () => {
 
   const [stats, setStats] = useState<Stats>({
     totalTemplates: 0,
-    totalHantaran: 0,
-    activeTemplates: 0,
-    activeHantaran: 0
+    activeTemplates: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -28,26 +24,19 @@ const AdminDashboard = () => {
     
     const fetchStatsWithAbort = async () => {
       try {
-        const [templatesRes, hantaranRes] = await Promise.all([
-          fetch('/api/templates', { signal: controller.signal }),
-          fetch('/api/hantaran', { signal: controller.signal })
-        ]);
+        const templatesRes = await fetch('/api/templates', { signal: controller.signal });
 
-        if (!templatesRes.ok || !hantaranRes.ok) {
+        if (!templatesRes.ok) {
           throw new Error('Failed to fetch data');
         }
 
         const templatesData = await templatesRes.json();
-        const hantaranData = await hantaranRes.json();
 
         const activeTemplates = templatesData.data?.filter((t: { is_active: boolean }) => t.is_active).length || 0;
-        const activeHantaran = hantaranData.data?.filter((h: { is_active: boolean }) => h.is_active).length || 0;
 
         setStats({
           totalTemplates: templatesData.data?.length || 0,
-          totalHantaran: hantaranData.data?.length || 0,
-          activeTemplates,
-          activeHantaran
+          activeTemplates
         });
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -57,9 +46,7 @@ const AdminDashboard = () => {
         // Set default stats on error
         setStats({
           totalTemplates: 0,
-          totalHantaran: 0,
-          activeTemplates: 0,
-          activeHantaran: 0
+          activeTemplates: 0
         });
       } finally {
         setLoading(false);
@@ -91,20 +78,6 @@ const AdminDashboard = () => {
       icon: Eye,
       color: 'bg-green-500',
       textColor: 'text-green-600'
-    },
-    {
-      title: 'Total Hantaran',
-      value: stats.totalHantaran,
-      icon: Gift,
-      color: 'bg-purple-500',
-      textColor: 'text-purple-600'
-    },
-    {
-      title: 'Active Hantaran',
-      value: stats.activeHantaran,
-      icon: TrendingUp,
-      color: 'bg-orange-500',
-      textColor: 'text-orange-600'
     }
   ];
 
@@ -115,13 +88,6 @@ const AdminDashboard = () => {
       href: '/admin/templates',
       icon: Package,
       color: 'bg-blue-50 hover:bg-blue-100 border-blue-200'
-    },
-    {
-      title: 'Manage Hantaran',
-      description: 'Create, edit, and manage hantaran packages',
-      href: '/admin/hantaran',
-      icon: Gift,
-      color: 'bg-purple-50 hover:bg-purple-100 border-purple-200'
     }
   ];
 
@@ -144,7 +110,7 @@ const AdminDashboard = () => {
           </div>
           <Link
             href="/"
-            className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+            className="text-white px-4 py-2 rounded-lg transition-colors" style={{backgroundColor: '#7c5367'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#52303f';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#7c5367';}}
           >
             View Site
           </Link>
@@ -214,19 +180,6 @@ const AdminDashboard = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Inactive Templates</span>
                     <span className="font-semibold text-red-600">{stats.totalTemplates - stats.activeTemplates}</span>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Hantaran Status</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Active Hantaran</span>
-                    <span className="font-semibold text-green-600">{stats.activeHantaran}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Inactive Hantaran</span>
-                    <span className="font-semibold text-red-600">{stats.totalHantaran - stats.activeHantaran}</span>
                   </div>
                 </div>
               </div>

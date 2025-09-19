@@ -59,22 +59,22 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-b from-white to-emerald-50">
+    <section id="contact" className="py-20" style={{background: 'linear-gradient(to bottom, white, #f3f0f2)'}}>
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4" data-aos="fade-up" data-aos-delay="100">
-            <MessageCircle className="h-8 w-8 text-yellow-500 mr-2" />
-            <span className="text-emerald-700 font-semibold text-lg">
+            <MessageCircle className="h-8 w-8 mr-2" style={{color: '#d1c7cc'}} />
+            <span className="font-semibold text-lg" style={{color: '#52303f'}}>
               Hubungi Kami
             </span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6" data-aos="fade-up" data-aos-delay="200">
-            <span className="bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
+            <span style={{background: 'linear-gradient(to right, #52303f, #7c5367)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>
               Konsultasi
             </span>
             <br />
-            <span className="text-yellow-600">Gratis Sekarang</span>
+            <span style={{color: '#d1c7cc'}}>Gratis Sekarang</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="300">
             Siap mewujudkan pernikahan impian Anda? Hubungi tim profesional kami untuk 
@@ -92,12 +92,9 @@ const Contact = () => {
                 const IconComponent = contact.icon;
                 return (
                   <div key={index} className="flex items-start space-x-4">
-                    <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                      contact.color === 'emerald' ? 'bg-emerald-100' : 'bg-yellow-100'
-                    }`}>
-                      <IconComponent className={`h-6 w-6 ${
-                        contact.color === 'emerald' ? 'text-emerald-600' : 'text-yellow-600'
-                      }`} />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
+                         style={{backgroundColor: contact.color === 'emerald' ? '#f3f0f2' : '#f8f6f7'}}>
+                      <IconComponent className="h-6 w-6" style={{color: contact.color === 'emerald' ? '#7c5367' : '#b8a5b0'}} />
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800 mb-1">{contact.title}</h4>
@@ -113,7 +110,7 @@ const Contact = () => {
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-gray-800 mb-4">Hubungi Langsung</h4>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-6 py-3 rounded-full font-semibold hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center">
+                <button className="flex-1 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}>
                   <Phone className="h-5 w-5 mr-2" />
                   Telepon Sekarang
                 </button>
@@ -127,10 +124,10 @@ const Contact = () => {
             {/* Map Placeholder */}
             <div className="mt-8">
               <h4 className="text-xl font-bold text-gray-800 mb-4">Lokasi Showroom</h4>
-              <div className="bg-gradient-to-br from-emerald-100 to-yellow-100 rounded-2xl p-8 text-center">
-                <MapPin className="h-16 w-16 text-emerald-600 mx-auto mb-4" />
-                <p className="text-emerald-700 font-semibold">Peta Lokasi</p>
-                <p className="text-emerald-600 text-sm">Jl. Mawar No. 123, Jakarta</p>
+              <div className="rounded-2xl p-8 text-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #f8f6f7)'}}>
+                <MapPin className="h-16 w-16 mx-auto mb-4" style={{color: '#7c5367'}} />
+                <p className="font-semibold" style={{color: '#52303f'}}>Peta Lokasi</p>
+                <p className="text-sm" style={{color: '#7c5367'}}>Jl. Mawar No. 123, Jakarta</p>
               </div>
             </div>
           </div>
@@ -154,7 +151,7 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" style={{'--focus-ring-color': '#7c5367', '--focus-border-color': '#7c5367'} as React.CSSProperties} onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
                       placeholder="Masukkan nama lengkap"
                     />
                   </div>
@@ -169,7 +166,7 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
                       placeholder="nama@email.com"
                     />
                   </div>
@@ -187,7 +184,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
                       placeholder="08123456789"
                     />
                   </div>
@@ -221,14 +218,14 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors resize-none" onFocus={(e) => {const target = e.target as HTMLTextAreaElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLTextAreaElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
                     placeholder="Ceritakan tentang pernikahan impian Anda..."
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                  className="w-full text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}
                 >
                   <Send className="h-5 w-5 mr-2" />
                   Kirim Pesan

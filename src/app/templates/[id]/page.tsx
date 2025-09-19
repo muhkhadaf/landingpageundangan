@@ -147,14 +147,7 @@ const TemplateDetailPage = () => {
             {/* Main Image */}
             <div className="relative overflow-hidden rounded-2xl shadow-lg group">
               <div className={`w-full h-96 ${displayImages[selectedImage]} flex items-center justify-center relative`} style={template?.image_url && selectedImage === 0 ? {backgroundImage: `url(${template.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}>
-                {/* Mock invitation preview */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-8 shadow-lg text-center max-w-[280px]">
-                  <Heart className="h-12 w-12 text-emerald-600 mx-auto mb-4" fill="currentColor" />
-                  <h3 className="font-bold text-emerald-800 text-lg mb-2">John & Jane</h3>
-                  <p className="text-sm text-gray-600 mb-3">25 Desember 2024</p>
-                  <p className="text-xs text-gray-500 mb-4">Ballroom Hotel Mulia</p>
-                  <div className="w-full h-2 bg-gradient-to-r from-emerald-400 to-green-400 rounded"></div>
-                </div>
+
                 
                 {/* Demo Button */}
                 <div className="absolute top-4 right-4">

@@ -75,11 +75,11 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl w-full">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
           {/* Animation Section - Mobile First */}
-           <div className="flex lg:hidden flex-1 bg-gradient-to-br from-emerald-500 to-green-600 items-center justify-center py-2">
+           <div className="flex lg:hidden flex-1 bg-gradient-to-br from-purple-500 to-purple-600 items-center justify-center py-2" style={{background: 'linear-gradient(to bottom right, #7c5367, #52303f)'}}>
              <div className="w-64 h-64">
                <DotLottieReact
                  src="https://lottie.host/0373309a-7ade-45dc-8990-5f2ddc14df85/nEHB8JNJ2B.lottie"
@@ -93,7 +93,7 @@ const AdminLogin = () => {
            <div className="flex-1 p-6 lg:p-8 max-w-md lg:max-w-none">
             <div className="space-y-8">
               <div className="text-center">
-                <div className="mx-auto h-16 w-16 bg-emerald-600 rounded-full flex items-center justify-center mb-4">
+                <div className="mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4" style={{backgroundColor: '#7c5367'}}>
                   <Lock className="h-8 w-8 text-white" />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -112,7 +112,7 @@ const AdminLogin = () => {
                 )}
                 
                 {success && (
-                  <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                  <div className="border px-4 py-3 rounded-lg text-sm" style={{backgroundColor: '#f3f0f2', borderColor: '#d1c7cc', color: '#52303f'}}>
                     {success}
                   </div>
                 )}
@@ -132,7 +132,7 @@ const AdminLogin = () => {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                        className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:border-transparent" style={{'--tw-ring-color': '#7c5367'} as React.CSSProperties}
                         placeholder="Enter your email"
                       />
                     </div>
@@ -152,7 +152,7 @@ const AdminLogin = () => {
                         required
                         value={formData.password}
                         onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                        className="pl-10 pr-10 w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        className="pl-10 pr-10 w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:border-transparent" style={{'--tw-ring-color': '#7c5367'} as React.CSSProperties}
                         placeholder="Enter your password"
                       />
                       <button
@@ -170,7 +170,7 @@ const AdminLogin = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2" style={{backgroundColor: '#7c5367', '--tw-ring-color': '#7c5367'} as React.CSSProperties} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#52303f'}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#7c5367'}}
                   >
                     {loading ? (
                       <div className="flex items-center">
@@ -193,7 +193,7 @@ const AdminLogin = () => {
           </div>
           
           {/* Animation Section - Desktop */}
-          <div className="hidden lg:flex flex-1 bg-gradient-to-br from-emerald-500 to-green-600 items-center justify-center">
+          <div className="hidden lg:flex flex-1 items-center justify-center" style={{background: 'linear-gradient(to bottom right, #7c5367, #52303f)'}}>
             <div className="w-96 h-96">
               <DotLottieReact
                 src="https://lottie.host/0373309a-7ade-45dc-8990-5f2ddc14df85/nEHB8JNJ2B.lottie"

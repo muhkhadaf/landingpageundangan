@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { createSupabaseAdmin } from '@/lib/supabase'
 
 // GET - Fetch single template by ID
 export async function GET(
@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const { id } = await params
     const { data, error } = await supabaseAdmin
       .from('templates')
@@ -39,6 +40,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const { id } = await params
     const body = await request.json()
     
@@ -90,6 +92,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const { id } = await params
     const { error } = await supabaseAdmin
       .from('templates')

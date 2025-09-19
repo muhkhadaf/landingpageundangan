@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Search, Eye, ShoppingCart, Heart, Grid, List } from 'lucide-react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import { Eye, Grid, List, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Template {
   id: number;
@@ -220,19 +220,11 @@ const TemplatesPage = () => {
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                       } : {
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                        background: 'linear-gradient(135deg,rgb(33, 36, 35) 0%, #059669 100%)'
                       }}
                     >
-                      {/* Mock invitation preview */}
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 shadow-lg text-center max-w-[200px]">
-                        <Heart className="h-8 w-8 text-emerald-600 mx-auto mb-2" fill="currentColor" />
-                        <h3 className="font-bold text-emerald-800 text-sm mb-1">John & Jane</h3>
-                        <p className="text-xs text-gray-600 mb-2">25 Desember 2024</p>
-                        <div className="w-full h-1 bg-gradient-to-r from-emerald-400 to-yellow-400 rounded"></div>
-                      </div>
-                      
                       {/* Category Badge */}
-                      <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      <div className="absolute top-4 left-4 text-white px-3 py-1 rounded-full text-sm font-semibold" style={{backgroundColor: '#7c536c'}}>
                         {template.category}
                       </div>
                       

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { NextRequest, NextResponse } from 'next/server'
+import { createSupabaseAdmin } from '@/lib/supabase';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 
@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const { email, password } = await request.json();
 
     if (!email || !password) {

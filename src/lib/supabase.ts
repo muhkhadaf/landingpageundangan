@@ -6,16 +6,23 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // For server-side operations that require elevated permissions
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
+// This should only be used in server-side code (API routes, server components)
+export const createSupabaseAdmin = () => {
+  if (typeof window !== 'undefined') {
+    throw new Error('supabaseAdmin should only be used on the server side');
   }
-)
+  
+  return createClient(
+    supabaseUrl,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  );
+};
 
 // Database types
 export interface Template {

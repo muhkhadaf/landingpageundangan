@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { createSupabaseAdmin } from '@/lib/supabase'
 
 // GET - Fetch all templates
 export async function GET(request: NextRequest) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const isActive = searchParams.get('is_active')
@@ -51,6 +52,7 @@ export async function GET(request: NextRequest) {
 // POST - Create new template
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = createSupabaseAdmin()
     const body = await request.json()
     const { title, category, price, description, image_url, features } = body
 

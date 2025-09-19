@@ -8,13 +8,13 @@ const About = () => {
       icon: Users,
       number: "500+",
       label: "Pasangan Bahagia",
-      color: "emerald"
+      color: "purple"
     },
     {
       icon: Award,
       number: "5+",
       label: "Tahun Pengalaman",
-      color: "yellow"
+      color: "light"
     },
     {
       icon: Heart,
@@ -33,22 +33,22 @@ const About = () => {
 
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-b from-emerald-50 to-white">
+    <section id="about" className="py-20" style={{background: 'linear-gradient(to bottom, #f3f0f2, white)'}}>
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4" data-aos="fade-up" data-aos-delay="100">
-            <Heart className="h-8 w-8 text-yellow-500 mr-2" fill="currentColor" />
-            <span className="text-emerald-700 font-semibold text-lg">
+            <Heart className="h-8 w-8 mr-2" style={{color: '#d1c7cc'}} fill="currentColor" />
+            <span className="font-semibold text-lg" style={{color: '#52303f'}}>
               Tentang Kami
             </span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6" data-aos="fade-up" data-aos-delay="200">
-            <span className="bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
+            <span style={{background: 'linear-gradient(to right, #52303f, #7c5367)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>
               Eternal Bliss
             </span>
             <br />
-            <span className="text-yellow-600">Wedding Vendor</span>
+            <span style={{color: '#d1c7cc'}}>Wedding Vendor</span>
           </h2>
         </div>
 
@@ -58,7 +58,7 @@ const About = () => {
           <div data-aos="fade-right" data-aos-delay="400">
             <h3 className="text-3xl font-bold text-gray-800 mb-6">
               Mewujudkan Pernikahan Impian dengan 
-              <span className="text-emerald-600"> Sentuhan Personal</span>
+              <span style={{color: '#7c5367'}}> Sentuhan Personal</span>
             </h3>
             <div className="space-y-6 text-gray-600 leading-relaxed">
               <p>
@@ -79,33 +79,33 @@ const About = () => {
             
             {/* Values */}
             <div className="mt-8 grid grid-cols-2 gap-4">
-              <div className="bg-emerald-100 p-4 rounded-xl">
-                <h4 className="font-semibold text-emerald-800 mb-2">Kualitas Premium</h4>
-                <p className="text-sm text-emerald-700">Material terbaik dengan finishing berkualitas tinggi</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#f3f0f2'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Kualitas Premium</h4>
+                <p className="text-sm" style={{color: '#7c5367'}}>Material terbaik dengan finishing berkualitas tinggi</p>
               </div>
-              <div className="bg-yellow-100 p-4 rounded-xl">
-                <h4 className="font-semibold text-yellow-800 mb-2">Desain Custom</h4>
-                <p className="text-sm text-yellow-700">Setiap produk disesuaikan dengan tema dan preferensi Anda</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Desain Custom</h4>
+                <p className="text-sm" style={{color: '#7c5367'}}>Setiap produk disesuaikan dengan tema dan preferensi Anda</p>
               </div>
-              <div className="bg-emerald-100 p-4 rounded-xl">
-                <h4 className="font-semibold text-emerald-800 mb-2">Tepat Waktu</h4>
-                <p className="text-sm text-emerald-700">Pengerjaan sesuai timeline yang telah disepakati</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#f3f0f2'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Tepat Waktu</h4>
+                <p className="text-sm" style={{color: '#7c5367'}}>Pengerjaan sesuai timeline yang telah disepakati</p>
               </div>
-              <div className="bg-yellow-100 p-4 rounded-xl">
-                <h4 className="font-semibold text-yellow-800 mb-2">Harga Terjangkau</h4>
-                <p className="text-sm text-yellow-700">Kualitas premium dengan harga yang kompetitif</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Harga Terjangkau</h4>
+                <p className="text-sm" style={{color: '#7c5367'}}>Kualitas premium dengan harga yang kompetitif</p>
               </div>
             </div>
           </div>
 
           {/* Right Content - Image Placeholder */}
           <div className="relative" data-aos="fade-left" data-aos-delay="500">
-            <div className="bg-gradient-to-br from-emerald-100 to-yellow-100 rounded-3xl p-8 shadow-xl">
-              <div className="aspect-square bg-gradient-to-br from-emerald-200 to-yellow-200 rounded-2xl flex items-center justify-center">
+            <div className="rounded-3xl p-8 shadow-xl" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #f8f6f7)'}}>
+              <div className="aspect-square rounded-2xl flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #e8e1e5, #ede7ea)'}}>
                 <div className="text-center" data-aos="zoom-in" data-aos-delay="700">
-                  <Users className="h-24 w-24 text-emerald-600 mx-auto mb-4" />
-                  <p className="text-emerald-700 font-semibold text-lg">Tim Profesional</p>
-                  <p className="text-emerald-600">Berpengalaman & Kreatif</p>
+                  <Users className="h-24 w-24 mx-auto mb-4" style={{color: '#7c5367'}} />
+                  <p className="font-semibold text-lg" style={{color: '#52303f'}}>Tim Profesional</p>
+                  <p style={{color: '#7c5367'}}>Berpengalaman & Kreatif</p>
                 </div>
               </div>
             </div>
@@ -118,16 +118,10 @@ const About = () => {
             const IconComponent = stat.icon;
             return (
               <div key={index} className="text-center">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
-                  stat.color === 'emerald' ? 'bg-emerald-100' : 'bg-yellow-100'
-                }`}>
-                  <IconComponent className={`h-8 w-8 ${
-                    stat.color === 'emerald' ? 'text-emerald-600' : 'text-yellow-600'
-                  }`} />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{backgroundColor: stat.color === 'purple' ? '#f3f0f2' : stat.color === 'light' ? '#f8f6f7' : stat.color === 'emerald' ? '#e8e1e5' : '#ede7ea'}}>
+                  <IconComponent className="h-8 w-8" style={{color: stat.color === 'purple' ? '#7c5367' : stat.color === 'light' ? '#b8a5b0' : stat.color === 'emerald' ? '#52303f' : '#d1c7cc'}} />
                 </div>
-                <div className={`text-3xl font-bold mb-2 ${
-                  stat.color === 'emerald' ? 'text-emerald-700' : 'text-yellow-600'
-                }`}>
+                <div className="text-3xl font-bold mb-2" style={{color: stat.color === 'purple' ? '#52303f' : stat.color === 'light' ? '#7c5367' : stat.color === 'emerald' ? '#52303f' : '#7c5367'}}>
                   {stat.number}
                 </div>
                 <div className="text-gray-600 font-medium">{stat.label}</div>
@@ -150,12 +144,12 @@ const About = () => {
             {/* First set of testimonials */}
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-emerald-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -165,12 +159,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -180,12 +174,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-emerald-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Dika & Rina</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -195,12 +189,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Fajar & Dewi</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -210,12 +204,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-emerald-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Hendra & Lisa</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -225,12 +219,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Indra & Putri</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -241,12 +235,12 @@ const About = () => {
             {/* Duplicate for seamless loop */}
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-emerald-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -256,12 +250,12 @@ const About = () => {
             
             <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex text-yellow-400">
+                  <div className="flex" style={{color: '#d1c7cc'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>

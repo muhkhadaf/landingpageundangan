@@ -1,7 +1,6 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import TemplateSection from '@/components/TemplateSection';
-import HantaranSection from '@/components/HantaranSection';
 import Services from '@/components/Services';
 import About from '@/components/About';
 import Contact from '@/components/Contact';
@@ -22,7 +21,6 @@ export default function Home() {
       <Header />
       <Hero />
       <TemplateSection />
-      <HantaranSection />
       <Services />
       <About />
       <Contact />
