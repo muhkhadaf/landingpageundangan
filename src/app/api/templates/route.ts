@@ -4,48 +4,79 @@ import { createSupabaseAdmin } from '@/lib/supabase'
 // GET - Fetch all templates
 export async function GET(request: NextRequest) {
   try {
-    const supabaseAdmin = createSupabaseAdmin()
-    const { searchParams } = new URL(request.url)
-    const category = searchParams.get('category')
-    const isActive = searchParams.get('is_active')
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const offset = (page - 1) * limit
+    const supabase = createSupabaseAdmin();
+    const { searchParams } = new URL(request.url);
+    const isActive = searchParams.get('is_active');
+    const limit = searchParams.get('limit');
+    const includePackages = searchParams.get('include_packages');
 
-    let query = supabaseAdmin
-      .from('templates')
-      .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
-
-    if (category) {
-      query = query.eq('category', category)
-    }
-
+    let query = supabase.from('templates').select('*');
+    
     if (isActive !== null) {
-      query = query.eq('is_active', isActive === 'true')
+      query = query.eq('is_active', isActive === 'true');
     }
+    
+    if (limit) {
+      query = query.limit(parseInt(limit));
+    }
+    
+    query = query.order('created_at', { ascending: false });
 
-    const { data, error, count } = await query
+    const { data: templates, error } = await query;
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Error fetching templates:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch templates' },
+        { status: 500 }
+      );
+    }
+
+    let transformedTemplates = templates;
+
+    // Jika diminta include packages, ambil packages untuk setiap template
+    if (includePackages === 'true') {
+      const templatesWithPackages = await Promise.all(
+        templates?.map(async (template) => {
+          const { data: packages } = await supabase
+            .from('packages_with_features')
+            .select('*')
+            .eq('template_id', template.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+          const transformedPackages = packages?.map(pkg => ({
+            id: pkg.id,
+            name: pkg.name,
+            description: pkg.description,
+            price: pkg.price,
+            price_display: pkg.price_display,
+            features: pkg.features?.map((feature: { text: string }) => feature.text) || [],
+            is_popular: pkg.is_popular,
+            sort_order: pkg.sort_order
+          })) || [];
+
+          return {
+            ...template,
+            packages: transformedPackages
+          };
+        }) || []
+      );
+
+      transformedTemplates = templatesWithPackages;
     }
 
     return NextResponse.json({
-      data,
-      pagination: {
-        page,
-        limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
-      }
-    })
-  } catch (_) {
+      success: true,
+      data: transformedTemplates
+    });
+
+  } catch (error) {
+    console.error('Error in GET /api/templates:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -82,7 +113,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ data }, { status: 201 })
-  } catch (_) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

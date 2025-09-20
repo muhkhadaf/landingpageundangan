@@ -53,7 +53,7 @@ const AdminLogin = () => {
               window.location.href = '/admin';
             }
           }, 500);
-        } catch (_) {
+        } catch {
            console.error('Router push failed');
            window.location.href = '/admin';
         }
@@ -67,7 +67,7 @@ const AdminLogin = () => {
           setError(data.error || 'Login gagal. Silakan coba lagi.');
         }
       }
-    } catch (error) {
+    } catch {
       setError('Terjadi kesalahan jaringan. Periksa koneksi internet Anda dan coba lagi.');
     } finally {
       setLoading(false);

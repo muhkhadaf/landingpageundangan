@@ -38,6 +38,12 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
       exact: false
     },
     {
+      href: '/admin/packages',
+      icon: Gift,
+      label: 'Packages',
+      exact: false
+    },
+    {
       href: '/admin/hantaran',
       icon: Gift,
       label: 'Hantaran',

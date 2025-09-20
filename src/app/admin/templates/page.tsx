@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search, Upload, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Template } from '@/lib/supabase';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { 
@@ -344,9 +345,11 @@ const TemplatesManagement = () => {
               {/* Template Image */}
               {template.image_url && (
                 <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-                  <img
+                  <Image
                     src={template.image_url}
                     alt={template.title}
+                    width={400}
+                    height={225}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -422,7 +425,7 @@ const TemplatesManagement = () => {
                   )}
                 </div>
                 
-                {/* Status Toggle */}
+                {/* Actions */}
                 <div className="flex justify-between items-center">
                   <button
                     onClick={() => toggleStatus(template)}
@@ -444,6 +447,13 @@ const TemplatesManagement = () => {
                       <><EyeOff className="h-4 w-4 mr-2" /> Inactive</>
                     )}
                   </button>
+                  
+                  <Link
+                    href={`/admin/templates/${template.id}/packages`}
+                    className="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors"
+                  >
+                    <span>Manage Packages</span>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -530,9 +540,11 @@ const TemplatesManagement = () => {
                   {(imagePreview || formData.image_url) && (
                     <div className="mb-4">
                       <div className="relative inline-block">
-                        <img
-                          src={imagePreview || formData.image_url}
+                        <Image
+                          src={imagePreview || formData.image_url || ''}
                           alt="Template preview"
+                          width={128}
+                          height={128}
                           className="w-32 h-32 object-cover rounded-lg border border-gray-300"
                         />
                         <button

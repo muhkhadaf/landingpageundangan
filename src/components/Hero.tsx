@@ -1,6 +1,7 @@
 'use client';
 
-import { ArrowRight, Gift, Heart, Sparkles } from 'lucide-react';
+import { ArrowRight, Gift, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 const Hero = () => {
   return (
@@ -91,9 +92,11 @@ const Hero = () => {
             <div className="relative rounded-3xl p-8 shadow-2xl m-6" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8dde2)'}}>
               {/* Hero Image */}
               <div className="aspect-square rounded-2xl overflow-hidden" data-aos="zoom-in" data-aos-delay="600">
-                <img 
+                <Image 
                   src="/undangan_digital_hero.png" 
                   alt="Undangan Digital Pernikahan" 
+                  width={400}
+                  height={400}
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -193,7 +193,12 @@ const TemplateDetailPage = () => {
               {/* Price Display */}
               <div className="bg-emerald-50 p-4 rounded-lg">
                 <p className="text-2xl font-bold text-emerald-800">
-                  {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                  {(() => {
+                    const numericPrice = typeof template.price === 'number' 
+                      ? template.price 
+                      : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
+                    return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                  })()}
                 </p>
                 <p className="text-sm text-emerald-600">Harga sudah termasuk customization</p>
               </div>
@@ -233,7 +238,12 @@ const TemplateDetailPage = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-emerald-600">
-                      {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                      {(() => {
+                        const numericPrice = typeof template.price === 'number' 
+                          ? template.price 
+                          : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
+                        return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                      })()}
                     </p>
                   </div>
                 </div>
@@ -266,7 +276,12 @@ const TemplateDetailPage = () => {
             <div className="space-y-4">
               <button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 <ShoppingCart className="h-5 w-5" />
-                Beli Sekarang - {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                Beli Sekarang - {(() => {
+                  const numericPrice = typeof template.price === 'number' 
+                    ? template.price 
+                    : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
+                  return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                })()}
               </button>
               
               <div className="flex gap-3">

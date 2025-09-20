@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, ShoppingCart, Heart, X, Check } from 'lucide-react';
+import { Eye, ShoppingCart, X, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
@@ -15,67 +15,100 @@ interface Template {
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
+  packages?: Package[];
+}
+
+interface Package {
+  id: number;
+  name: string;
+  price: number;
+  price_display: string;
+  features: string[];
+  is_popular: boolean;
+  sort_order: number;
 }
 
 const TemplateSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
 
-  const packages = [
-    {
-      id: 1,
-      name: "Paket Basic",
-      price: "Rp 150.000",
-      features: [
-        "Template undangan digital",
-        "Maksimal 100 tamu",
-        "1x revisi gratis",
-        "Support WhatsApp"
-      ],
-      popular: false
-    },
-    {
-      id: 2,
-      name: "Paket Premium",
-      price: "Rp 250.000",
-      features: [
-        "Template undangan digital",
-        "Maksimal 300 tamu",
-        "3x revisi gratis",
-        "Support WhatsApp",
-        "Musik background",
-        "Galeri foto (10 foto)"
-      ],
-      popular: true
-    },
-    {
-      id: 3,
-      name: "Paket Deluxe",
-      price: "Rp 400.000",
-      features: [
-        "Template undangan digital",
-        "Unlimited tamu",
-        "Unlimited revisi",
-        "Support WhatsApp 24/7",
-        "Musik background",
-        "Galeri foto (25 foto)",
-        "Video prewedding",
-        "Live streaming"
-      ],
-      popular: false
-    }
-  ];
+  // Fetch packages from API - Tidak diperlukan lagi karena packages sudah ada di template
+  // useEffect(() => {
+  //   const fetchPackages = async () => {
+  //     try {
+  //       setPackagesLoading(true);
+  //       const response = await fetch('/api/packages');
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch packages');
+  //       }
+  //       const result = await response.json();
+  //       setPackages(result.data || []);
+  //     } catch (err) {
+  //       console.error('Error fetching packages:', err);
+  //       // Fallback ke data statis jika API gagal
+  //       setPackages([
+  //         {
+  //           id: 1,
+  //           name: "Paket Basic",
+  //           price: "Rp 150.000",
+  //           features: [
+  //             "Template undangan digital",
+  //             "Maksimal 100 tamu",
+  //             "1x revisi gratis",
+  //             "Support WhatsApp"
+  //           ],
+  //           popular: false
+  //         },
+  //         {
+  //           id: 2,
+  //           name: "Paket Premium",
+  //           price: "Rp 250.000",
+  //           features: [
+  //             "Template undangan digital",
+  //             "Maksimal 300 tamu",
+  //             "3x revisi gratis",
+  //             "Support WhatsApp",
+  //             "Musik background",
+  //             "Galeri foto (10 foto)"
+  //           ],
+  //           popular: true
+  //         },
+  //         {
+  //           id: 3,
+  //           name: "Paket Deluxe",
+  //           price: "Rp 400.000",
+  //           features: [
+  //             "Template undangan digital",
+  //             "Unlimited tamu",
+  //             "Unlimited revisi",
+  //             "Support WhatsApp 24/7",
+  //             "Musik background",
+  //             "Galeri foto (25 foto)",
+  //             "Video prewedding",
+  //             "Live streaming"
+  //           ],
+  //           popular: false
+  //         }
+  //       ]);
+  //     } finally {
+  //       setPackagesLoading(false);
+  //     }
+  //   };
 
-  // Fetch templates from API
+  //   fetchPackages();
+  // }, []);
+
+  // Fetch templates from API with packages
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/templates?is_active=true&limit=6');
+        const response = await fetch('/api/templates?is_active=true&limit=6&include_packages=true');
         if (!response.ok) {
           throw new Error('Failed to fetch templates');
         }
@@ -223,7 +256,12 @@ const TemplateSection = () => {
               <div className="p-3 sm:p-4 md:p-5 lg:p-6">
                 <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1 sm:mb-2" style={{color: '#52303f'}}>{template.title}</h3>
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 md:mb-4" style={{color: '#d4af37'}}>
-                  {template.price}
+                  {(() => {
+                    const numericPrice = typeof template.price === 'number' 
+                      ? template.price 
+                      : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
+                    return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                  })()}
                 </p>
                 
                 {/* Action Buttons */}
@@ -231,6 +269,62 @@ const TemplateSection = () => {
                   <button 
                     onClick={() => {
                       setSelectedTemplate(template);
+                      // Gunakan packages dari template yang dipilih
+                      if (template.packages && template.packages.length > 0) {
+                        setPackages(template.packages);
+                      } else {
+                        // Fallback ke packages default jika template tidak memiliki packages
+                        setPackages([
+                          {
+                            id: 1,
+                            name: "Paket Basic",
+                            price: 150000,
+                            price_display: "Rp 150.000",
+                            features: [
+                              "Template undangan digital",
+                              "Maksimal 100 tamu",
+                              "1x revisi gratis",
+                              "Support WhatsApp"
+                            ],
+                            is_popular: false,
+                            sort_order: 1
+                          },
+                          {
+                            id: 2,
+                            name: "Paket Premium",
+                            price: 250000,
+                            price_display: "Rp 250.000",
+                            features: [
+                              "Template undangan digital",
+                              "Maksimal 300 tamu",
+                              "3x revisi gratis",
+                              "Support WhatsApp",
+                              "Musik background",
+                              "Galeri foto (10 foto)"
+                            ],
+                            is_popular: true,
+                            sort_order: 2
+                          },
+                          {
+                            id: 3,
+                            name: "Paket Deluxe",
+                            price: 400000,
+                            price_display: "Rp 400.000",
+                            features: [
+                              "Template undangan digital",
+                              "Unlimited tamu",
+                              "Unlimited revisi",
+                              "Support WhatsApp 24/7",
+                              "Musik background",
+                              "Galeri foto (25 foto)",
+                              "Video prewedding",
+                              "Live streaming"
+                            ],
+                            is_popular: false,
+                            sort_order: 3
+                          }
+                        ]);
+                      }
                       setIsModalOpen(true);
                     }}
                     className="flex-1 text-white px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
@@ -314,17 +408,18 @@ const TemplateSection = () => {
 
             {/* Modal Content */}
              <div className="p-3 sm:p-6">
+                {/* Tampilkan packages dari template yang dipilih */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8">
-                {packages.map((pkg) => (
+                    {packages.map((pkg) => (
                   <div 
                      key={pkg.id}
                      className={`relative border-2 rounded-lg sm:rounded-xl p-2 sm:p-4 lg:p-6 transition-all duration-300 hover:shadow-lg min-h-[280px] sm:min-h-[350px] lg:min-h-[400px] flex flex-col ${
-                       pkg.popular 
+                       pkg.is_popular 
                          ? 'border-purple-500 bg-purple-50' 
                          : 'border-gray-200 hover:border-purple-300'
                      }`}
                    >
-                    {pkg.popular && (
+                    {pkg.is_popular && (
                        <div className="absolute -top-2 sm:-top-3 left-1/2 transform -translate-x-1/2 z-10">
                          <span className="bg-emerald-500 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                            Terpopuler
@@ -334,7 +429,7 @@ const TemplateSection = () => {
                     
                     <div className="text-center mb-3 sm:mb-4 lg:mb-6">
                        <h4 className="text-sm sm:text-lg lg:text-xl font-bold mb-1 sm:mb-2" style={{color: '#52303f'}}>{pkg.name}</h4>
-                       <div className="text-lg sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4" style={{color: '#d4af37'}}>{pkg.price}</div>
+                       <div className="text-lg sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4" style={{color: '#d4af37'}}>{pkg.price_display}</div>
                      </div>
 
                     <ul className="space-y-1 sm:space-y-2 lg:space-y-3 mb-3 sm:mb-6 lg:mb-8 flex-grow">
@@ -349,14 +444,14 @@ const TemplateSection = () => {
                     <div className="mt-auto">
                        <button 
                          className={`w-full py-2 sm:py-2.5 lg:py-3 px-2 sm:px-3 lg:px-4 rounded-md sm:rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base ${
-                           pkg.popular
+                           pkg.is_popular
                              ? 'text-white shadow-lg'
                              : 'border-2'
                          }`}
-                         style={pkg.popular ? {background: 'linear-gradient(to right, #7c5367, #52303f)'} : {borderColor: '#7c5367', color: '#7c5367'}}
+                         style={pkg.is_popular ? {background: 'linear-gradient(to right, #7c5367, #52303f)'} : {borderColor: '#7c5367', color: '#7c5367'}}
                          onMouseEnter={(e) => {
                            const target = e.target as HTMLButtonElement;
-                           if (pkg.popular) {
+                           if (pkg.is_popular) {
                              target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';
                            } else {
                              target.style.backgroundColor = '#7c5367';
@@ -365,7 +460,7 @@ const TemplateSection = () => {
                          }}
                          onMouseLeave={(e) => {
                            const target = e.target as HTMLButtonElement;
-                           if (pkg.popular) {
+                           if (pkg.is_popular) {
                              target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';
                            } else {
                              target.style.backgroundColor = 'transparent';

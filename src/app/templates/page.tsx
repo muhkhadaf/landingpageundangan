@@ -253,7 +253,12 @@ const TemplatesPage = () => {
                     </div>
                     
                     <p className="text-2xl font-bold text-yellow-600 mb-4">
-                      {typeof template.price === 'number' ? `Rp ${template.price.toLocaleString('id-ID')}` : template.price}
+                      {(() => {
+                        const numericPrice = typeof template.price === 'number' 
+                          ? template.price 
+                          : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
+                        return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                      })()}
                     </p>
                     
                     {/* Action Buttons */}
