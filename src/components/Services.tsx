@@ -40,8 +40,8 @@ const Services = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4" data-aos="fade-up" data-aos-delay="100">
-            <Star className="h-8 w-8 mr-2" style={{color: '#d1c7cc'}} fill="currentColor" />
-            <span className="font-semibold text-lg" style={{color: '#52303f'}}>
+            <Star className="h-8 w-8 mr-2" style={{color: '#d4af37'}} fill="currentColor" />
+            <span className="font-semibold text-lg" style={{color: '#d4af37'}}>
               Layanan Kami
             </span>
           </div>
@@ -50,7 +50,7 @@ const Services = () => {
               Paket Lengkap
             </span>
             <br />
-            <span style={{color: '#d1c7cc'}}>Pernikahan Impian</span>
+            <span style={{color: '#d4af37'}}>Pernikahan Impian</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="300">
             Kami menyediakan layanan terbaik untuk mewujudkan pernikahan impian Anda dengan 

@@ -9,16 +9,16 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="text-white shadow-lg sticky top-0 z-50" style={{background: 'linear-gradient(to right, #52303f, #7c5367)'}} data-aos="fade-down" data-aos-duration="1000">
+    <header className="text-white shadow-lg sticky top-0 z-50" style={{background: 'linear-gradient(to right, #52303f, #7c5367)'}}>
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center" data-aos="fade-right" data-aos-delay="200">
+          <Link href="/" className="flex items-center">
             <Image src="/logo.png" alt="Logo" width={1000} height={100} className="h-10 w-40" />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8" data-aos="fade-down" data-aos-delay="300">
+          <nav className="hidden md:flex space-x-8">
             <Link href="/" className="transition-colors duration-300 font-medium" style={{'--hover-color': '#d1c7cc'} as React.CSSProperties} onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = '#d1c7cc'} onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = 'white'}>
               Beranda
             </Link>

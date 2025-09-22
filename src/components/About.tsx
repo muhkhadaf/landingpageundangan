@@ -38,17 +38,17 @@ const About = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4" data-aos="fade-up" data-aos-delay="100">
-            <Heart className="h-8 w-8 mr-2" style={{color: '#d1c7cc'}} fill="currentColor" />
-            <span className="font-semibold text-lg" style={{color: '#52303f'}}>
+            <Heart className="h-8 w-8 mr-2" style={{color: '#d4af37'}} fill="currentColor" />
+            <span className="font-semibold text-lg" style={{color: '#d4af37'}}>
               Tentang Kami
             </span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6" data-aos="fade-up" data-aos-delay="200">
             <span style={{background: 'linear-gradient(to right, #52303f, #7c5367)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>
-              Eternal Bliss
+              Nanda Invitation
             </span>
             <br />
-            <span style={{color: '#d1c7cc'}}>Wedding Vendor</span>
+            <span style={{color: '#d4af37'}}>Wedding Vendor</span>
           </h2>
         </div>
 
@@ -79,17 +79,17 @@ const About = () => {
             
             {/* Values */}
             <div className="mt-8 grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl" style={{backgroundColor: '#f3f0f2'}}>
-                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Kualitas Premium</h4>
-                <p className="text-sm" style={{color: '#7c5367'}}>Material terbaik dengan finishing berkualitas tinggi</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#52303f'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Kualitas Premium</h4>
+                <p className="text-sm" style={{color: '#f3f0f2'}}>Material terbaik dengan finishing berkualitas tinggi</p>
               </div>
               <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
                 <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Desain Custom</h4>
                 <p className="text-sm" style={{color: '#7c5367'}}>Setiap produk disesuaikan dengan tema dan preferensi Anda</p>
               </div>
-              <div className="p-4 rounded-xl" style={{backgroundColor: '#f3f0f2'}}>
-                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Tepat Waktu</h4>
-                <p className="text-sm" style={{color: '#7c5367'}}>Pengerjaan sesuai timeline yang telah disepakati</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#52303f'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Tepat Waktu</h4>
+                <p className="text-sm" style={{color: '#f3f0f2'}}>Pengerjaan sesuai timeline yang telah disepakati</p>
               </div>
               <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
                 <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Harga Terjangkau</h4>
@@ -149,7 +149,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -164,7 +164,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -179,7 +179,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Dika & Rina</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -194,7 +194,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Fajar & Dewi</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -209,7 +209,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Hendra & Lisa</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -224,7 +224,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Indra & Putri</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -240,7 +240,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>
@@ -255,7 +255,7 @@ const About = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex" style={{color: '#d1c7cc'}}>
+                  <div className="flex" style={{color: '#d4af37'}}>
                     {'★'.repeat(5)}
                   </div>
                 </div>

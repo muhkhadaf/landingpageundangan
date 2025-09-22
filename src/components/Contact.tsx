@@ -64,8 +64,8 @@ const Contact = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4" data-aos="fade-up" data-aos-delay="100">
-            <MessageCircle className="h-8 w-8 mr-2" style={{color: '#d1c7cc'}} />
-            <span className="font-semibold text-lg" style={{color: '#52303f'}}>
+            <MessageCircle className="h-8 w-8 mr-2" style={{color: '#d4af37'}} />
+            <span className="font-semibold text-lg" style={{color: '#d4af37'}}>
               Hubungi Kami
             </span>
           </div>
@@ -74,7 +74,7 @@ const Contact = () => {
               Konsultasi
             </span>
             <br />
-            <span style={{color: '#d1c7cc'}}>Gratis Sekarang</span>
+            <span style={{color: '#d4af37'}}>Gratis Sekarang</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="300">
             Siap mewujudkan pernikahan impian Anda? Hubungi tim profesional kami untuk 

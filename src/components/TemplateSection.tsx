@@ -35,7 +35,7 @@ const TemplateSection = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   // Fetch packages from API - Tidak diperlukan lagi karena packages sudah ada di template
   // useEffect(() => {
@@ -113,7 +113,14 @@ const TemplateSection = () => {
           throw new Error('Failed to fetch templates');
         }
         const result = await response.json();
-        setTemplates(result.data || []);
+        const templatesData = result.data || [];
+        setTemplates(templatesData);
+        
+        // Set first category as default if no category is selected
+        if (templatesData.length > 0 && !selectedCategory) {
+          const firstCategory = templatesData[0].category;
+          setSelectedCategory(firstCategory);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load templates');
         console.error('Error fetching templates:', err);
@@ -123,15 +130,13 @@ const TemplateSection = () => {
     };
 
     fetchTemplates();
-  }, []);
+  }, [selectedCategory]);
 
   // Get unique categories from templates
-  const categories = ['Semua', ...Array.from(new Set(templates.map(t => t.category)))];
+  const categories = Array.from(new Set(templates.map(t => t.category)));
 
   // Filter templates based on selected category
-  const filteredTemplates = selectedCategory === 'Semua' 
-    ? templates 
-    : templates.filter(template => template.category === selectedCategory);
+  const filteredTemplates = templates.filter(template => template.category === selectedCategory);
 
   // Fallback gradient colors for templates without images
   const getGradientClass = (index: number) => {

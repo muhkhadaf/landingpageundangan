@@ -19,8 +19,8 @@ const Hero = () => {
           {/* Left Content */}
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start mb-6" data-aos="fade-right" data-aos-delay="100">
-              <Sparkles className="h-8 w-8 mr-2" style={{color: '#7c5367'}} />
-              <span className="font-semibold text-lg" style={{color: '#52303f'}}>
+              <Sparkles className="h-8 w-8 mr-2" style={{color: '#d4af37'}} />
+              <span className="font-semibold text-lg" style={{color: '#d4af37'}}>
                 Wedding Vendor Terpercaya
               </span>
             </div>
@@ -30,7 +30,7 @@ const Hero = () => {
                 Wujudkan
               </span>
               <br />
-              <span style={{color: '#7c536c'}}>
+              <span style={{color: '#d4af37'}}>
                 Pernikahan
               </span>
               <br />
