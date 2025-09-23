@@ -1,24 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Search, Plus, Edit, Trash2, Eye, EyeOff, Calendar, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Plus, Edit, Trash2, Eye, EyeOff, Calendar, User, Upload, X } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  category: string;
-  published_date: string;
-  is_published: boolean;
-  image_url: string;
-  read_time: string;
-  views: number;
-  created_at: string;
-  updated_at: string;
-}
+import { 
+  fetchBlogs, 
+  createBlog, 
+  updateBlog, 
+  deleteBlog,
+  uploadBlogImage,
+  deleteBlogImage,
+  validateBlogImageFile,
+  createImagePreview,
+  cleanupImagePreview,
+  extractImagePath,
+  type BlogPost
+} from '@/lib/blog-storage';
 
 const BlogManagement = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -36,9 +33,14 @@ const BlogManagement = () => {
     author: '',
     category: '',
     image_url: '',
-    read_time: '',
     is_published: false
   });
+  
+  // Image upload states
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories = ['Tips Pernikahan', 'Hantaran', 'Dekorasi', 'Fotografi', 'Catering', 'Lainnya'];
 
@@ -49,55 +51,8 @@ const BlogManagement = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      // For now, using mock data since API doesn't exist yet
-      const mockPosts: BlogPost[] = [
-        {
-          id: 1,
-          title: "Tips Memilih Template Undangan Pernikahan yang Sempurna",
-          excerpt: "Panduan lengkap untuk memilih template undangan yang sesuai dengan tema dan budget pernikahan Anda.",
-          content: "Content here...",
-          author: "Tim Ayung Wedding",
-          category: "Tips Pernikahan",
-          published_date: "2024-01-15",
-          is_published: true,
-          image_url: "https://example.com/image1.jpg",
-          read_time: "5 min",
-          views: 1250,
-          created_at: "2024-01-15T10:00:00Z",
-          updated_at: "2024-01-15T10:00:00Z"
-        },
-        {
-          id: 2,
-          title: "Tren Hantaran Pernikahan 2024: Ide Kreatif dan Unik",
-          excerpt: "Inspirasi hantaran pernikahan terbaru yang sedang trending. Dari hantaran tradisional hingga konsep modern.",
-          content: "Content here...",
-          author: "Sarah Dewi",
-          category: "Hantaran",
-          published_date: "2024-01-12",
-          is_published: true,
-          image_url: "https://example.com/image2.jpg",
-          read_time: "7 min",
-          views: 980,
-          created_at: "2024-01-12T10:00:00Z",
-          updated_at: "2024-01-12T10:00:00Z"
-        },
-        {
-          id: 3,
-          title: "Cara Menghemat Budget Pernikahan Tanpa Mengurangi Kemewahan",
-          excerpt: "Strategi cerdas untuk mengatur budget pernikahan. Tips dan trik dari wedding planner berpengalaman.",
-          content: "Content here...",
-          author: "Andi Pratama",
-          category: "Tips Pernikahan",
-          published_date: "2024-01-10",
-          is_published: false,
-          image_url: "https://example.com/image3.jpg",
-          read_time: "6 min",
-          views: 1450,
-          created_at: "2024-01-10T10:00:00Z",
-          updated_at: "2024-01-10T10:00:00Z"
-        }
-      ];
-      setPosts(mockPosts);
+      const blogPosts = await fetchBlogs();
+      setPosts(blogPosts);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -108,13 +63,17 @@ const BlogManagement = () => {
   const togglePublishStatus = async (post: BlogPost) => {
     setActionLoading(`toggle-${post.id}`);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const updatedPost = await updateBlog(post.id!, {
+        title: post.title,
+        content: post.content,
+        excerpt: post.excerpt,
+        author: post.author,
+        image_url: post.image_url,
+        is_published: !post.is_published
+      });
       
       setPosts(posts.map(p => 
-        p.id === post.id 
-          ? { ...p, is_published: !p.is_published }
-          : p
+        p.id === post.id ? updatedPost : p
       ));
     } catch (error) {
       console.error('Error updating post status:', error);
@@ -128,26 +87,40 @@ const BlogManagement = () => {
     setActionLoading('form');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      let finalImageUrl = formData.image_url;
+      
+      // Upload image if selected
+      if (selectedFile) {
+        setUploadingImage(true);
+        finalImageUrl = await uploadBlogImage(selectedFile);
+        
+        // Delete old image if editing and had previous image
+        if (editingPost && editingPost.image_url) {
+          const oldImagePath = extractImagePath(editingPost.image_url);
+          if (oldImagePath) {
+            try {
+              await deleteBlogImage(oldImagePath);
+            } catch (error) {
+              console.warn('Failed to delete old image:', error);
+            }
+          }
+        }
+      }
+      
+      const blogData = {
+        ...formData,
+        image_url: finalImageUrl
+      };
       
       if (editingPost) {
         // Update existing post
+        const updatedPost = await updateBlog(editingPost.id!, blogData);
         setPosts(posts.map(p => 
-          p.id === editingPost.id 
-            ? { ...p, ...formData, updated_at: new Date().toISOString() }
-            : p
+          p.id === editingPost.id ? updatedPost : p
         ));
       } else {
         // Create new post
-        const newPost: BlogPost = {
-          id: Date.now(),
-          ...formData,
-          published_date: new Date().toISOString().split('T')[0],
-          views: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
+        const newPost = await createBlog(blogData);
         setPosts([newPost, ...posts]);
       }
       
@@ -156,6 +129,7 @@ const BlogManagement = () => {
       console.error('Error saving post:', error);
     } finally {
       setActionLoading(null);
+      setUploadingImage(false);
     }
   };
 
@@ -167,34 +141,63 @@ const BlogManagement = () => {
       author: '',
       category: '',
       image_url: '',
-      read_time: '',
       is_published: false
     });
     setEditingPost(null);
     setShowForm(false);
+    
+    // Reset image upload states
+    setSelectedFile(null);
+    if (imagePreview) {
+      cleanupImagePreview(imagePreview);
+      setImagePreview('');
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleEdit = (post: BlogPost) => {
     setFormData({
       title: post.title,
-      excerpt: post.excerpt,
+      excerpt: post.excerpt || '',
       content: post.content,
-      author: post.author,
-      category: post.category,
-      image_url: post.image_url,
-      read_time: post.read_time,
+      author: post.author || '',
+      category: '',
+      image_url: post.image_url || '',
       is_published: post.is_published
     });
     setEditingPost(post);
     setShowForm(true);
+    
+    // Set image preview if post has image
+    if (post.image_url) {
+      setImagePreview(post.image_url);
+    }
   };
 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this post?')) {
       setActionLoading(`delete-${id}`);
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Find the post to get image URL for deletion
+        const postToDelete = posts.find(p => p.id === id);
+        
+        // Delete the blog post
+        await deleteBlog(id);
+        
+        // Delete associated image if exists
+        if (postToDelete && postToDelete.image_url) {
+          const imagePath = extractImagePath(postToDelete.image_url);
+          if (imagePath) {
+            try {
+              await deleteBlogImage(imagePath);
+            } catch (error) {
+              console.warn('Failed to delete associated image:', error);
+            }
+          }
+        }
+        
         setPosts(posts.filter(p => p.id !== id));
       } catch (error) {
         console.error('Error deleting post:', error);
@@ -204,10 +207,44 @@ const BlogManagement = () => {
     }
   };
 
+  // Image upload handlers
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validation = validateBlogImageFile(file);
+    if (!validation.isValid) {
+      alert(validation.error);
+      return;
+    }
+
+    setSelectedFile(file);
+    
+    // Create preview
+    const preview = await createImagePreview(file);
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      cleanupImagePreview(imagePreview);
+    }
+    setImagePreview(preview);
+    
+    // Clear the image_url field since we're using file upload
+    setFormData({...formData, image_url: ''});
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    if (imagePreview) {
+      cleanupImagePreview(imagePreview);
+      setImagePreview('');
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+                         (post.author && post.author.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === 'all';
     const matchesStatus = selectedStatus === 'all' || 
                          (selectedStatus === 'published' && post.is_published) ||
                          (selectedStatus === 'draft' && !post.is_published);
@@ -292,7 +329,7 @@ const BlogManagement = () => {
                 }`}>
                   {post.is_published ? 'Published' : 'Draft'}
                 </span>
-                <span className="text-xs text-gray-500">{post.category}</span>
+                <span className="text-xs text-gray-500">Blog Post</span>
               </div>
               
               <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
@@ -300,23 +337,18 @@ const BlogManagement = () => {
               </h3>
               
               <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                {post.excerpt}
+                {post.excerpt || 'No excerpt available'}
               </p>
               
               <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
                 <div className="flex items-center">
                   <User className="h-4 w-4 mr-1" />
-                  {post.author}
+                  {post.author || 'Unknown Author'}
                 </div>
                 <div className="flex items-center">
                   <Calendar className="h-4 w-4 mr-1" />
-                  {new Date(post.published_date).toLocaleDateString('id-ID')}
+                  {post.created_at ? new Date(post.created_at).toLocaleDateString('id-ID') : 'No date'}
                 </div>
-              </div>
-              
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                <span>{post.read_time}</span>
-                <span>{post.views.toLocaleString('id-ID')} views</span>
               </div>
               
               <div className="flex items-center justify-between">
@@ -328,7 +360,7 @@ const BlogManagement = () => {
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(post.id)}
+                    onClick={() => handleDelete(post.id!)}
                     disabled={actionLoading === `delete-${post.id}`}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                   >
@@ -375,7 +407,7 @@ const BlogManagement = () => {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-10 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -430,6 +462,95 @@ const BlogManagement = () => {
                   />
                 </div>
                 
+                {/* Image Upload Section */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Blog Image
+                  </label>
+                  
+                  {/* Image Preview */}
+                  {imagePreview && (
+                    <div className="mb-4 relative">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Upload Options */}
+                  <div className="space-y-4">
+                    {/* File Upload */}
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-emerald-500 hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {uploadingImage ? (
+                          <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-5 w-5 text-gray-400" />
+                            <span className="text-gray-600">
+                              Click to upload image or drag and drop
+                            </span>
+                          </>
+                        )}
+                      </button>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Supported formats: JPG, PNG, WebP. Max size: 5MB
+                      </p>
+                    </div>
+                    
+                    {/* OR Divider */}
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300" />
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-white text-gray-500">OR</span>
+                      </div>
+                    </div>
+                    
+                    {/* URL Input */}
+                    <div>
+                      <input
+                        type="url"
+                        placeholder="Enter image URL"
+                        value={formData.image_url}
+                        onChange={(e) => {
+                          setFormData({...formData, image_url: e.target.value});
+                          if (e.target.value && !selectedFile) {
+                            setImagePreview(e.target.value);
+                          }
+                        }}
+                        disabled={!!selectedFile}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -459,33 +580,6 @@ const BlogManagement = () => {
                         <option key={category} value={category}>{category}</option>
                       ))}
                     </select>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Image URL
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Read Time
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g., 5 min"
-                      value={formData.read_time}
-                      onChange={(e) => setFormData({...formData, read_time: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                    />
                   </div>
                 </div>
                 

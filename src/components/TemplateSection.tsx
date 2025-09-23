@@ -156,21 +156,21 @@ const TemplateSection = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl font-bold mb-4" style={{color: '#52303f'}}>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 px-4" style={{color: '#52303f'}}>
             Template Undangan Pilihan
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Koleksi template undangan pernikahan terbaik dengan desain elegan dan modern
           </p>
         </div>
 
         {/* Category Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up" data-aos-delay="100">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 max-w-4xl mx-auto px-4" data-aos="fade-up" data-aos-delay="100">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
+              className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm lg:text-base font-semibold transition-all duration-300 transform hover:scale-105 whitespace-nowrap ${
                 selectedCategory === category
                   ? 'text-white shadow-lg'
                   : 'bg-white text-gray-700 border-2 hover:shadow-md'
@@ -395,7 +395,7 @@ const TemplateSection = () => {
 
       {/* Modal Pilihan Paket */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-10 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[95vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-6 flex items-center justify-between rounded-t-2xl">

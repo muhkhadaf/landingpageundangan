@@ -9,6 +9,7 @@ import {
     LogOut,
     Menu,
     Package,
+    Star,
     X
 } from 'lucide-react';
 import Link from 'next/link';
@@ -47,6 +48,24 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
       href: '/admin/hantaran',
       icon: Gift,
       label: 'Hantaran',
+      exact: false
+    },
+    {
+      href: '/admin/services',
+      icon: Package,
+      label: 'Services',
+      exact: false
+    },
+    {
+      href: '/admin/service-cta',
+      icon: FileText,
+      label: 'Service CTA',
+      exact: false
+    },
+    {
+      href: '/admin/testimonials',
+      icon: Star,
+      label: 'Testimonials',
       exact: false
     },
     {
@@ -90,7 +109,7 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
       {/* Mobile overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-gray-900 bg-opacity-10 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}

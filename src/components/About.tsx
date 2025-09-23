@@ -1,8 +1,48 @@
 'use client';
 
 import { Award, Clock, Heart, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+interface Testimonial {
+  id: number;
+  customer_name: string;
+  rating: number;
+  testimonial_text: string;
+  photo_url?: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+}
 
 const About = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch testimonials from API
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch('/api/testimonials');
+        const result = await response.json();
+        
+        if (response.ok && result.data) {
+          // Filter only active testimonials and sort by sort_order
+          const activeTestimonials = result.data
+            .filter((testimonial: Testimonial) => testimonial.is_active)
+            .sort((a: Testimonial, b: Testimonial) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          setTestimonials(activeTestimonials);
+        }
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+        // Keep empty array if API fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   const stats = [
     {
       icon: Users,
@@ -140,129 +180,114 @@ const About = () => {
 
         {/* Scrolling Testimonials */}
         <div className="overflow-hidden relative">
-          <div className="flex animate-scroll-left space-x-6">
-            {/* First set of testimonials */}
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!&rdquo;</p>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <span className="ml-2 text-gray-600">Loading testimonials...</span>
             </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
+          ) : testimonials.length > 0 ? (
+            <div className="flex animate-scroll-left space-x-6">
+              {/* First set of testimonials */}
+              {testimonials.map((testimonial, index) => (
+                <div key={`first-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
+                  <div className="flex items-center mb-4">
+                    {testimonial.photo_url ? (
+                      <img 
+                        src={testimonial.photo_url} 
+                        alt={testimonial.customer_name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        onError={(e) => {
+                          // Fallback to Heart icon if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${testimonial.photo_url ? 'hidden' : ''}`} style={{background: index % 2 === 0 ? 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)' : 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                      <Heart className="h-6 w-6" style={{color: index % 2 === 0 ? '#7c5367' : '#b8a5b0'}} />
+                    </div>
+                    <div className="ml-4">
+                      <h4 className="font-bold text-gray-800">{testimonial.customer_name}</h4>
+                      <div className="flex" style={{color: '#d4af37'}}>
+                        {'★'.repeat(testimonial.rating)}
+                      </div>
+                    </div>
                   </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">&ldquo;{testimonial.testimonial_text}&rdquo;</p>
                 </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!&rdquo;</p>
-            </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Dika & Rina</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
+              ))}
+              
+              {/* Second set for seamless loop */}
+              {testimonials.map((testimonial, index) => (
+                <div key={`second-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
+                  <div className="flex items-center mb-4">
+                    {testimonial.photo_url ? (
+                      <img 
+                        src={testimonial.photo_url} 
+                        alt={testimonial.customer_name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        onError={(e) => {
+                          // Fallback to Heart icon if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${testimonial.photo_url ? 'hidden' : ''}`} style={{background: index % 2 === 0 ? 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)' : 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                      <Heart className="h-6 w-6" style={{color: index % 2 === 0 ? '#7c5367' : '#b8a5b0'}} />
+                    </div>
+                    <div className="ml-4">
+                      <h4 className="font-bold text-gray-800">{testimonial.customer_name}</h4>
+                      <div className="flex" style={{color: '#d4af37'}}>
+                        {'★'.repeat(testimonial.rating)}
+                      </div>
+                    </div>
                   </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">&ldquo;{testimonial.testimonial_text}&rdquo;</p>
                 </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Tim yang sangat profesional dan responsif. Hasil akhir melebihi ekspektasi kami!&rdquo;</p>
-            </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Fajar & Dewi</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
+              ))}
+
+              {/* Third set for extra smooth transition */}
+              {testimonials.map((testimonial, index) => (
+                <div key={`third-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
+                  <div className="flex items-center mb-4">
+                    {testimonial.photo_url ? (
+                      <img 
+                        src={testimonial.photo_url} 
+                        alt={testimonial.customer_name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        onError={(e) => {
+                          // Fallback to Heart icon if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${testimonial.photo_url ? 'hidden' : ''}`} style={{background: index % 2 === 0 ? 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)' : 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
+                      <Heart className="h-6 w-6" style={{color: index % 2 === 0 ? '#7c5367' : '#b8a5b0'}} />
+                    </div>
+                    <div className="ml-4">
+                      <h4 className="font-bold text-gray-800">{testimonial.customer_name}</h4>
+                      <div className="flex" style={{color: '#d4af37'}}>
+                        {'★'.repeat(testimonial.rating)}
+                      </div>
+                    </div>
                   </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">&ldquo;{testimonial.testimonial_text}&rdquo;</p>
                 </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Proses pemesanan mudah dan hasilnya sangat memuaskan. Highly recommended!&rdquo;</p>
+              ))}
             </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Hendra & Lisa</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Kualitas undangan premium dengan harga yang terjangkau. Terima kasih atas pelayanan terbaiknya!&rdquo;</p>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No testimonials available at the moment.</p>
             </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Indra & Putri</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Detail yang sangat diperhatikan dan hasil yang sempurna. Pernikahan kami jadi tak terlupakan!&rdquo;</p>
-            </div>
-            
-            {/* Duplicate for seamless loop */}
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #e8e1e5)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#7c5367'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Andi & Sari</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Undangan yang dibuat sangat indah dan sesuai dengan tema pernikahan kami. Pelayanan sangat memuaskan!&rdquo;</p>
-            </div>
-            
-            <div className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #f8f6f7, #ede7ea)'}}>
-                  <Heart className="h-6 w-6" style={{color: '#b8a5b0'}} />
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold text-gray-800">Budi & Maya</h4>
-                  <div className="flex" style={{color: '#d4af37'}}>
-                    {'★'.repeat(5)}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">&ldquo;Hantaran yang disiapkan sangat unik dan berkesan. Tamu undangan sampai terpukau melihatnya!&rdquo;</p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

@@ -1,11 +1,11 @@
+import About from '@/components/About';
+import BlogSection from '@/components/BlogSection';
+import Contact from '@/components/Contact';
+import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import TemplateSection from '@/components/TemplateSection';
 import Services from '@/components/Services';
-import About from '@/components/About';
-import Contact from '@/components/Contact';
-import BlogSection from '@/components/BlogSection';
-import Footer from '@/components/Footer';
+import TemplateSection from '@/components/TemplateSection';
 
 export default function Home() {
   return (

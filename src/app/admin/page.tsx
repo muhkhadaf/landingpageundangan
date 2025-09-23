@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Package, Eye } from 'lucide-react';
+import { Package, Eye, FileText, Star } from 'lucide-react';
 import Link from 'next/link';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
@@ -88,6 +88,27 @@ const AdminDashboard = () => {
       href: '/admin/templates',
       icon: Package,
       color: 'bg-blue-50 hover:bg-blue-100 border-blue-200'
+    },
+    {
+      title: 'Manage Services',
+      description: 'Create, edit, and manage service offerings',
+      href: '/admin/services',
+      icon: Package,
+      color: 'bg-green-50 hover:bg-green-100 border-green-200'
+    },
+    {
+      title: 'Service CTA',
+      description: 'Manage call-to-action content for services section',
+      href: '/admin/service-cta',
+      icon: FileText,
+      color: 'bg-purple-50 hover:bg-purple-100 border-purple-200'
+    },
+    {
+      title: 'Manage Testimonials',
+      description: 'Create, edit, and manage customer testimonials',
+      href: '/admin/testimonials',
+      icon: Star,
+      color: 'bg-yellow-50 hover:bg-yellow-100 border-yellow-200'
     }
   ];
 

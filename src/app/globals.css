@@ -50,7 +50,7 @@ html {
   border-radius: 4px;
 }
 
-/* Testimonial scroll animation */
+/* Testimonial scroll animation - seamless infinite loop */
 @keyframes scroll-left {
   0% {
     transform: translateX(0);
@@ -61,7 +61,8 @@ html {
 }
 
 .animate-scroll-left {
-  animation: scroll-left 15s linear infinite;
+  animation: scroll-left 30s linear infinite;
+  width: max-content;
 }
 
 ::-webkit-scrollbar-thumb:hover {
