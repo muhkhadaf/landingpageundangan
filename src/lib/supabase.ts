@@ -35,7 +35,9 @@ export interface Template {
   price: number
   description: string
   image_url: string
+  images?: string[]
   features: string[]
+  preview_link?: string
   is_active: boolean
   created_at: string
   updated_at: string

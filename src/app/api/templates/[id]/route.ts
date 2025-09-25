@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseAdmin } from '@/lib/supabase'
+import { NextRequest, NextResponse } from 'next/server'
 
 // GET - Fetch single template by ID
 export async function GET(
@@ -59,7 +59,10 @@ export async function PUT(
         category: body.category,
         price: body.price,
         image_url: body.image_url,
+        images: body.images,
         description: body.description,
+        features: body.features,
+        preview_link: body.preview_link,
         is_active: body.is_active,
         updated_at: new Date().toISOString()
       })

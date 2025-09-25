@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Phone, Mail, MapPin, Instagram, Facebook, Twitter, MessageCircle } from 'lucide-react';
+import { Facebook, Heart, Instagram, Mail, MapPin, MessageCircle, Phone, Twitter } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -14,10 +14,8 @@ const Footer = () => {
   ];
 
   const services = [
-    { name: 'Undangan Pernikahan', href: '#services' },
-    { name: 'Hantaran Pernikahan', href: '#services' },
-    { name: 'Paket Lengkap', href: '#services' },
-    { name: 'Konsultasi Gratis', href: '#contact' }
+    { name: 'Web Undangan Digital', href: '#services' },
+    { name: 'Undangan JPEG', href: '#services' }
   ];
 
   const socialMedia = [
@@ -36,11 +34,11 @@ const Footer = () => {
             <div className="flex items-center space-x-2 mb-6">
               <Heart className="h-8 w-8" fill="currentColor" style={{color: '#d4af37'}} />
               <span className="text-2xl font-bold bg-clip-text text-transparent" style={{background: 'linear-gradient(to right, #d4af37, #f4e4a6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
-                Eternal Bliss
+                Nanda Invitation
               </span>
             </div>
             <p className="leading-relaxed mb-6" style={{color: '#f3f0f2'}}>
-              Wedding vendor terpercaya yang menghadirkan undangan dan hantaran pernikahan 
+              Undangan Digital Wedding vendor terpercaya yang menghadirkan undangan dan hantaran pernikahan 
               berkualitas premium untuk mewujudkan hari bahagia Anda.
             </p>
             <div className="space-y-3">
@@ -50,11 +48,11 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5" style={{color: '#d4af37'}} />
-                <span style={{color: '#f3f0f2'}}>info@eternalbliss.com</span>
+                <span style={{color: '#f3f0f2'}}>nandainvitation@gmail.com </span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5" style={{color: '#d4af37'}} />
-                <span style={{color: '#f3f0f2'}}>Jl. Mawar No. 123, Jakarta</span>
+                <span style={{color: '#f3f0f2'}}>Jl. Citanduy RT.005 RW.009 No.3, Kel. Cipayung, Kec. Ciputat, Kota Tangerang Selatan - Banten</span>
               </div>
             </div>
           </div>
@@ -95,30 +93,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter & Social */}
+          {/* Social Media Only */}
           <div data-aos="fade-up" data-aos-delay="400">
-            <h3 className="text-xl font-bold mb-6" style={{color: '#d4af37'}}>Tetap Terhubung</h3>
-            <p className="mb-4" style={{color: '#f3f0f2'}}>
-              Dapatkan tips pernikahan dan penawaran spesial langsung di email Anda.
-            </p>
+            <h3 className="text-xl font-bold mb-6" style={{color: '#d4af37'}}>Ikuti Kami</h3>
             
-            {/* Newsletter Signup */}
-            <div className="mb-6">
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Email Anda"
-                  className="flex-1 px-4 py-2 rounded-l-lg text-white border transition-colors" style={{backgroundColor: '#7c5367', borderColor: '#52303f'}} onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #d4af37'; target.style.borderColor = '#d4af37';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#52303f';}}
-                />
-                <button className="px-4 py-2 rounded-r-lg font-semibold transition-colors duration-300" style={{backgroundColor: '#d4af37', color: '#52303f'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#f4e4a6';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.backgroundColor = '#d4af37';}}>
-                  Subscribe
-                </button>
-              </div>
-            </div>
-
             {/* Social Media */}
             <div>
-              <h4 className="text-lg font-semibold mb-4" style={{color: '#f3f0f2'}}>Ikuti Kami</h4>
               <div className="flex space-x-4">
                 {socialMedia.map((social, index) => {
                   const IconComponent = social.icon;
@@ -144,7 +124,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm" style={{color: '#f8f6f7'}}>
-              © {currentYear} Eternal Bliss Wedding Vendor. All rights reserved.
+              © {currentYear} Nanda Invitation. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
               <a href="#" className="transition-colors duration-300" style={{color: '#f8f6f7'}} onMouseEnter={(e) => {const target = e.target as HTMLAnchorElement; target.style.color = '#d4af37';}} onMouseLeave={(e) => {const target = e.target as HTMLAnchorElement; target.style.color = '#f8f6f7';}}>

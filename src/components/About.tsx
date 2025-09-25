@@ -3,6 +3,7 @@
 import { Award, Clock, Heart, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+
 interface Testimonial {
   id: number;
   customer_name: string;
@@ -70,8 +71,6 @@ const About = () => {
     }
   ];
 
-
-
   return (
     <section id="about" className="py-20" style={{background: 'linear-gradient(to bottom, #f3f0f2, white)'}}>
       <div className="container mx-auto px-4">
@@ -93,10 +92,9 @@ const About = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-          {/* Left Content */}
-          <div data-aos="fade-right" data-aos-delay="400">
-            <h3 className="text-3xl font-bold text-gray-800 mb-6">
+        <div className="max-w-3xl mx-auto mb-20">
+          <div data-aos="fade-up" data-aos-delay="400">
+            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
               Mewujudkan Pernikahan Impian dengan 
               <span style={{color: '#7c5367'}}> Sentuhan Personal</span>
             </h3>
@@ -118,38 +116,27 @@ const About = () => {
             </div>
             
             {/* Values */}
-            <div className="mt-8 grid grid-cols-2 gap-4">
+            <div className="mt-8 grid sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl" style={{backgroundColor: '#52303f'}}>
                 <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Kualitas Premium</h4>
                 <p className="text-sm" style={{color: '#f3f0f2'}}>Material terbaik dengan finishing berkualitas tinggi</p>
               </div>
-              <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
-                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Desain Custom</h4>
-                <p className="text-sm" style={{color: '#7c5367'}}>Setiap produk disesuaikan dengan tema dan preferensi Anda</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#7c5367'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Desain Custom</h4>
+                <p className="text-sm" style={{color: '#f3f0f2'}}>Setiap produk disesuaikan dengan tema dan preferensi Anda</p>
               </div>
               <div className="p-4 rounded-xl" style={{backgroundColor: '#52303f'}}>
                 <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Tepat Waktu</h4>
                 <p className="text-sm" style={{color: '#f3f0f2'}}>Pengerjaan sesuai timeline yang telah disepakati</p>
               </div>
-              <div className="p-4 rounded-xl" style={{backgroundColor: '#f8f6f7'}}>
-                <h4 className="font-semibold mb-2" style={{color: '#52303f'}}>Harga Terjangkau</h4>
-                <p className="text-sm" style={{color: '#7c5367'}}>Kualitas premium dengan harga yang kompetitif</p>
+              <div className="p-4 rounded-xl" style={{backgroundColor: '#7c5367'}}>
+                <h4 className="font-semibold mb-2" style={{color: '#f3f0f2'}}>Harga Terjangkau</h4>
+                <p className="text-sm" style={{color: '#f3f0f2'}}>Kualitas premium dengan harga yang kompetitif</p>
               </div>
             </div>
           </div>
 
-          {/* Right Content - Image Placeholder */}
-          <div className="relative" data-aos="fade-left" data-aos-delay="500">
-            <div className="rounded-3xl p-8 shadow-xl" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #f8f6f7)'}}>
-              <div className="aspect-square rounded-2xl flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #e8e1e5, #ede7ea)'}}>
-                <div className="text-center" data-aos="zoom-in" data-aos-delay="700">
-                  <Users className="h-24 w-24 mx-auto mb-4" style={{color: '#7c5367'}} />
-                  <p className="font-semibold text-lg" style={{color: '#52303f'}}>Tim Profesional</p>
-                  <p style={{color: '#7c5367'}}>Berpengalaman & Kreatif</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
 
         {/* Stats */}

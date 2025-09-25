@@ -12,7 +12,9 @@ interface Template {
   category: string;
   price: string | number;
   image_url?: string;
+  images?: string[];
   description?: string;
+  preview_link?: string;
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -79,7 +81,7 @@ const TemplatesPage = () => {
         <Header />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#52303f] mx-auto mb-4"></div>
             <p className="text-gray-600">Memuat template...</p>
           </div>
         </div>
@@ -97,11 +99,11 @@ const TemplatesPage = () => {
           <div className="text-center">
             <p className="text-red-600 mb-4">Error: {error}</p>
             <button 
-              onClick={() => window.location.reload()}
-              className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700"
-            >
-              Coba Lagi
-            </button>
+               onClick={() => window.location.reload()}
+               className="bg-[#52303f] text-white px-4 py-2 rounded-lg hover:bg-[#7c5367]"
+             >
+               Coba Lagi
+             </button>
           </div>
         </div>
         <Footer />
@@ -114,7 +116,7 @@ const TemplatesPage = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="bg-gradient-to-r from-emerald-800 to-emerald-600 text-white py-16">
+      <section className="bg-gradient-to-r from-[#52303f] to-[#7c5367] text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Template Undangan Pernikahan</h1>
           <p className="text-xl opacity-90">Pilih template undangan yang sempurna untuk hari bahagia Anda</p>
@@ -133,7 +135,7 @@ const TemplatesPage = () => {
                 placeholder="Cari template..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52303f] focus:border-[#52303f]"
               />
             </div>
 
@@ -143,7 +145,7 @@ const TemplatesPage = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52303f] focus:border-[#52303f]"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>{category}</option>
@@ -154,7 +156,7 @@ const TemplatesPage = () => {
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52303f] focus:border-[#52303f]"
               >
                 {priceRanges.map(range => (
                   <option key={range.value} value={range.value}>{range.label}</option>
@@ -165,13 +167,13 @@ const TemplatesPage = () => {
               <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-3 ${viewMode === 'grid' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                  className={`p-3 ${viewMode === 'grid' ? 'bg-[#52303f] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                 >
                   <Grid className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-3 ${viewMode === 'list' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                  className={`p-3 ${viewMode === 'list' ? 'bg-[#52303f] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                 >
                   <List className="h-5 w-5" />
                 </button>
@@ -215,13 +217,17 @@ const TemplatesPage = () => {
                   }`}>
                     <div 
                       className={`w-full h-full flex items-center justify-center relative`}
-                      style={template.image_url ? {
-                        backgroundImage: `url(${template.image_url})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
-                      } : {
-                        background: 'linear-gradient(135deg,rgb(33, 36, 35) 0%, #059669 100%)'
-                      }}
+                      style={(() => {
+                        // Use thumbnail (image_url) for card display
+                        const thumbnailUrl = template.image_url;
+                        return thumbnailUrl ? {
+                          backgroundImage: `url(${thumbnailUrl})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        } : {
+                          background: 'linear-gradient(135deg,rgb(33, 36, 35) 0%, #059669 100%)'
+                        };
+                      })()}
                     >
                       {/* Category Badge */}
                       <div className="absolute top-4 left-4 text-white px-3 py-1 rounded-full text-sm font-semibold" style={{backgroundColor: '#7c536c'}}>
@@ -240,7 +246,7 @@ const TemplatesPage = () => {
 
                   {/* Template Info */}
                   <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
-                    <h3 className="text-xl font-bold text-emerald-800 mb-2">{template.title}</h3>
+                    <h3 className="text-xl font-bold text-[#52303f] mb-2">{template.title}</h3>
                     <p className="text-gray-600 mb-3 text-sm">{template.description || 'Template undangan pernikahan modern dengan desain yang elegan.'}</p>
                     
                     {/* Template Info */}
@@ -263,16 +269,29 @@ const TemplatesPage = () => {
                     
                     {/* Action Buttons */}
                     <div className="flex gap-3">
-                      <button className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-4 py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                      <button className="flex-1 bg-gradient-to-r from-[#52303f] to-[#7c5367] text-white px-4 py-3 rounded-lg font-semibold hover:from-[#7c5367] hover:to-[#52303f] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         <ShoppingCart className="h-4 w-4" />
                         Beli Sekarang
                       </button>
-                      <Link href={`/templates/${template.id}`}>
-                        <button className="border-2 border-emerald-600 text-emerald-600 px-4 py-3 rounded-lg font-semibold hover:bg-emerald-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                          <Eye className="h-4 w-4" />
-                          Detail
-                        </button>
-                      </Link>
+                      <div className="flex gap-2">
+                        {template.preview_link && (
+                          <a 
+                            href={template.preview_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="border-2 border-blue-600 text-blue-600 px-3 py-3 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Eye className="h-4 w-4" />
+                            Preview
+                          </a>
+                        )}
+                        <Link href={`/templates/${template.id}`}>
+                          <button className="border-2 border-[#52303f] text-[#52303f] px-4 py-3 rounded-lg font-semibold hover:bg-[#52303f] hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                            <Eye className="h-4 w-4" />
+                            Detail
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

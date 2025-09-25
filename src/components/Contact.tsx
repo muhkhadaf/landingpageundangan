@@ -2,11 +2,11 @@
 
 import { Clock, Mail, MapPin, MessageCircle, Phone, Send } from 'lucide-react';
 import { useState } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
     service: '',
     message: ''
@@ -38,15 +38,14 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email",
-      info: "info@eternalbliss.com",
+      info: "nandainvitation@gmail.com",
       subInfo: "Respon dalam 24 jam",
       color: "yellow"
     },
     {
       icon: MapPin,
       title: "Alamat",
-      info: "Jl. Mawar No. 123, Jakarta",
-      subInfo: "Kunjungi showroom kami",
+      info: "Jl. Citanduy RT.005 RW.009 No.3, Kel. Cipayung, Kec. Ciputat, Kota Tangerang Selatan - Banten",
       color: "emerald"
     },
     {
@@ -121,116 +120,15 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div className="mt-8">
-              <h4 className="text-xl font-bold text-gray-800 mb-4">Lokasi Showroom</h4>
-              <div className="rounded-2xl p-8 text-center" style={{background: 'linear-gradient(to bottom right, #f3f0f2, #f8f6f7)'}}>
-                <MapPin className="h-16 w-16 mx-auto mb-4" style={{color: '#7c5367'}} />
-                <p className="font-semibold" style={{color: '#52303f'}}>Peta Lokasi</p>
-                <p className="text-sm" style={{color: '#7c5367'}}>Jl. Mawar No. 123, Jakarta</p>
-              </div>
-            </div>
           </div>
-
-          {/* Contact Form */}
+          {/* Lottie Animation */}
           <div data-aos="fade-left" data-aos-delay="500">
-            <div className="bg-white rounded-3xl p-8 shadow-xl">
-              <h3 className="text-3xl font-bold text-gray-800 mb-2">Form Konsultasi</h3>
-              <p className="text-gray-600 mb-8">Isi form di bawah ini dan tim kami akan menghubungi Anda dalam 24 jam</p>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nama Lengkap *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" style={{'--focus-ring-color': '#7c5367', '--focus-border-color': '#7c5367'} as React.CSSProperties} onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
-                      placeholder="Masukkan nama lengkap"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
-                      placeholder="nama@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nomor Telepon *
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors" onFocus={(e) => {const target = e.target as HTMLInputElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLInputElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
-                      placeholder="08123456789"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="service" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Layanan yang Diminati
-                    </label>
-                    <select
-                      id="service"
-                      name="service"
-                      value={formData.service}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                    >
-                      <option value="">Pilih layanan</option>
-                      <option value="undangan">Undangan Pernikahan</option>
-                      <option value="hantaran">Hantaran Pernikahan</option>
-                      <option value="paket">Paket Lengkap</option>
-                      <option value="konsultasi">Konsultasi Umum</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Pesan / Pertanyaan
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl transition-colors resize-none" onFocus={(e) => {const target = e.target as HTMLTextAreaElement; target.style.outline = '2px solid #7c5367'; target.style.borderColor = '#7c5367';}} onBlur={(e) => {const target = e.target as HTMLTextAreaElement; target.style.outline = 'none'; target.style.borderColor = '#d1d5db';}}
-                    placeholder="Ceritakan tentang pernikahan impian Anda..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}
-                >
-                  <Send className="h-5 w-5 mr-2" />
-                  Kirim Pesan
-                </button>
-              </form>
+            <div className="bg-white rounded-3xl p-8 shadow-xl flex items-center justify-center">
+              <DotLottieReact 
+                src="https://lottie.host/9dea089b-40a0-4ea0-9514-57694750cfa7/axUUNVtHFQ.lottie" 
+                loop 
+                autoplay 
+              />
             </div>
           </div>
         </div>

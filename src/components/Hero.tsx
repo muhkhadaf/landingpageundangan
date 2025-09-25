@@ -56,15 +56,15 @@ const Hero = () => {
                 Lihat Paket Layanan
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
-              <button className="border-2 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" style={{borderColor: '#d1c7cc', color: '#d1c7cc'}} onMouseEnter={(e) => {
+              <button className="border-2 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" style={{borderColor: '#d4af37', color: '#d4af37'}} onMouseEnter={(e) => {
               const target = e.target as HTMLButtonElement;
-              target.style.backgroundColor = '#d1c7cc';
+              target.style.backgroundColor = '#d4af37';
               target.style.color = 'white';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLButtonElement;
               target.style.backgroundColor = 'transparent';
-              target.style.color = '#7c5367';
+              target.style.color = '#d4af37';
             }}>
                 Konsultasi Gratis
               </button>

@@ -11,6 +11,7 @@ interface Template {
   category: string;
   price: string;
   image_url?: string;
+  images?: string[];
   description?: string;
   is_active?: boolean;
   created_at?: string;
@@ -37,71 +38,6 @@ const TemplateSection = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  // Fetch packages from API - Tidak diperlukan lagi karena packages sudah ada di template
-  // useEffect(() => {
-  //   const fetchPackages = async () => {
-  //     try {
-  //       setPackagesLoading(true);
-  //       const response = await fetch('/api/packages');
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch packages');
-  //       }
-  //       const result = await response.json();
-  //       setPackages(result.data || []);
-  //     } catch (err) {
-  //       console.error('Error fetching packages:', err);
-  //       // Fallback ke data statis jika API gagal
-  //       setPackages([
-  //         {
-  //           id: 1,
-  //           name: "Paket Basic",
-  //           price: "Rp 150.000",
-  //           features: [
-  //             "Template undangan digital",
-  //             "Maksimal 100 tamu",
-  //             "1x revisi gratis",
-  //             "Support WhatsApp"
-  //           ],
-  //           popular: false
-  //         },
-  //         {
-  //           id: 2,
-  //           name: "Paket Premium",
-  //           price: "Rp 250.000",
-  //           features: [
-  //             "Template undangan digital",
-  //             "Maksimal 300 tamu",
-  //             "3x revisi gratis",
-  //             "Support WhatsApp",
-  //             "Musik background",
-  //             "Galeri foto (10 foto)"
-  //           ],
-  //           popular: true
-  //         },
-  //         {
-  //           id: 3,
-  //           name: "Paket Deluxe",
-  //           price: "Rp 400.000",
-  //           features: [
-  //             "Template undangan digital",
-  //             "Unlimited tamu",
-  //             "Unlimited revisi",
-  //             "Support WhatsApp 24/7",
-  //             "Musik background",
-  //             "Galeri foto (25 foto)",
-  //             "Video prewedding",
-  //             "Live streaming"
-  //           ],
-  //           popular: false
-  //         }
-  //       ]);
-  //     } finally {
-  //       setPackagesLoading(false);
-  //     }
-  //   };
-
-  //   fetchPackages();
-  // }, []);
 
   // Fetch templates from API with packages
   useEffect(() => {
@@ -239,13 +175,18 @@ const TemplateSection = () => {
             >
               {/* Template Preview */}
               <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
-                <div className={`w-full h-full ${template.image_url ? '' : getGradientClass(index)} flex items-center justify-center relative`} style={template.image_url ? {backgroundImage: `url(${template.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center'} : {}}>
-
-                  
-                  {/* Category Badge */}
-                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 md:top-4 md:left-4 text-white px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-semibold" style={{backgroundColor: '#7c536c'}}>
-                    {template.category}
-                  </div>
+                <div 
+                  className={`w-full h-full ${template.image_url ? '' : getGradientClass(index)} flex items-center justify-center relative`} 
+                  style={(() => {
+                    // Use thumbnail (image_url) for card display
+                    const thumbnailUrl = template.image_url;
+                    return thumbnailUrl ? {
+                      backgroundImage: `url(${thumbnailUrl})`, 
+                      backgroundSize: 'cover', 
+                      backgroundPosition: 'center'
+                    } : {};
+                  })()}
+                >
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

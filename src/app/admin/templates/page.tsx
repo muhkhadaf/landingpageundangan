@@ -29,9 +29,13 @@ const TemplatesManagement = () => {
     price: '',
     description: '',
     image_url: '',
+    images: [] as string[],
     features: [] as string[],
+    preview_link: '',
     is_active: true
   });
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -58,18 +62,31 @@ const TemplatesManagement = () => {
 
     try {
       let imageUrl = formData.image_url;
+      const finalImages: string[] = [...(formData.images || [])]; // Start with existing images
 
-      // Upload new image if selected
+      // Upload new images if selected
+      if (imageFiles.length > 0) {
+        for (const file of imageFiles) {
+          const uploadedUrl = await uploadTemplateImage(file);
+          if (!uploadedUrl) {
+            alert('Failed to upload one or more images. Please try again.');
+            return;
+          }
+          finalImages.push(uploadedUrl); // Add new images to existing ones
+        }
+      }
+
+      // Upload thumbnail image if selected
       if (imageFile) {
         setUploadingImage(true);
         const uploadedUrl = await uploadTemplateImage(imageFile);
         if (!uploadedUrl) {
-          alert('Failed to upload image. Please try again.');
+          alert('Failed to upload thumbnail image. Please try again.');
           return;
         }
         imageUrl = uploadedUrl;
 
-        // Delete old image if editing and had previous image
+        // Delete old thumbnail image if editing and had previous image
         if (editingTemplate && editingTemplate.image_url && editingTemplate.image_url !== imageUrl) {
           await deleteTemplateImage(editingTemplate.image_url);
         }
@@ -81,7 +98,9 @@ const TemplatesManagement = () => {
         price: parseFloat(formData.price),
         description: formData.description,
         image_url: imageUrl,
+        images: finalImages,
         features: formData.features.filter(f => f.trim() !== ''),
+        preview_link: formData.preview_link,
         is_active: formData.is_active
       };
 
@@ -158,15 +177,20 @@ const TemplatesManagement = () => {
       price: '',
       description: '',
       image_url: '',
+      images: [],
       features: [],
+      preview_link: '',
       is_active: true
     });
     setEditingTemplate(null);
     setImageFile(null);
+    setImageFiles([]);
     if (imagePreview) {
       cleanupImagePreview(imagePreview);
       setImagePreview(null);
     }
+    imagePreviews.forEach(preview => cleanupImagePreview(preview));
+    setImagePreviews([]);
   };
 
   const openEditModal = (template: Template) => {
@@ -177,14 +201,19 @@ const TemplatesManagement = () => {
       price: template.price.toString(),
       description: template.description || '',
       image_url: template.image_url || '',
+      images: template.images || [],
       features: template.features || [],
+      preview_link: template.preview_link || '',
       is_active: template.is_active
     });
     setImageFile(null);
+    setImageFiles([]);
     if (imagePreview) {
       cleanupImagePreview(imagePreview);
       setImagePreview(null);
     }
+    imagePreviews.forEach(preview => cleanupImagePreview(preview));
+    setImagePreviews([]);
     setShowModal(true);
   };
 
@@ -209,22 +238,79 @@ const TemplatesManagement = () => {
     }));
   };
 
+  const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Check total images limit (existing + new)
+    const totalExistingImages = (formData.images?.length || 0) + imagePreviews.length;
+    const totalAfterUpload = totalExistingImages + files.length;
+    
+    if (totalAfterUpload > 4) {
+      alert(`You can only have up to 4 images total. You currently have ${totalExistingImages} images. You can add ${4 - totalExistingImages} more.`);
+      return;
+    }
+
+    // Validate all files
+    for (const file of files) {
+      const validation = validateImageFile(file);
+      if (!validation.isValid) {
+        alert(`Invalid file "${file.name}": ${validation.error}`);
+        return;
+      }
+    }
+
+    // Create new previews for the new files
+    const newPreviews: string[] = [];
+    for (const file of files) {
+      const preview = await createImagePreview(file);
+      newPreviews.push(preview);
+    }
+
+    // Add new files and previews to existing ones
+    setImageFiles(prev => [...prev, ...files]);
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+    
+    // Clear the input so the same files can be selected again if needed
+    e.target.value = '';
+  };
+
+  const removeImageFromGallery = (index: number) => {
+    const newFiles = imageFiles.filter((_, i) => i !== index);
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    
+    // Clean up the removed preview
+    if (imagePreviews[index]) {
+      cleanupImagePreview(imagePreviews[index]);
+    }
+
+    setImageFiles(newFiles);
+    setImagePreviews(newPreviews);
+  };
+
+  const removeExistingImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+  
     // Validate file
     const validation = validateImageFile(file);
     if (!validation.isValid) {
       alert(validation.error);
       return;
     }
-
+  
     // Clean up previous preview
     if (imagePreview) {
       cleanupImagePreview(imagePreview);
     }
-
+  
     // Create new preview
     const preview = await createImagePreview(file);
     setImageFile(file);
@@ -530,19 +616,36 @@ const TemplatesManagement = () => {
                   />
                 </div>
                 
-                {/* Image Upload Section */}
+                {/* Preview Link */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Template Image
+                    Preview Link
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://example.com/template-preview"
+                    value={formData.preview_link || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, preview_link: e.target.value }))}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link to live preview of the template (optional)
+                  </p>
+                </div>
+                
+                {/* Thumbnail Image Upload Section */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Thumbnail Image (for card display)
                   </label>
                   
-                  {/* Current Image Display */}
+                  {/* Current Thumbnail Display */}
                   {(imagePreview || formData.image_url) && (
                     <div className="mb-4">
                       <div className="relative inline-block">
                         <Image
                           src={imagePreview || formData.image_url || ''}
-                          alt="Template preview"
+                          alt="Thumbnail preview"
                           width={128}
                           height={128}
                           className="w-32 h-32 object-cover rounded-lg border border-gray-300"
@@ -558,32 +661,32 @@ const TemplatesManagement = () => {
                     </div>
                   )}
                   
-                  {/* Upload Controls */}
+                  {/* Thumbnail Upload Controls */}
                   <div className="space-y-3">
                     <div>
                       <input
                         type="file"
-                        id="image-upload"
+                        id="thumbnail-upload"
                         accept="image/*"
                         onChange={handleImageChange}
                         className="hidden"
                       />
                       <label
-                        htmlFor="image-upload"
+                        htmlFor="thumbnail-upload"
                         className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer transition-colors"
                       >
                         <Upload className="h-4 w-4 mr-2" />
-                        {imageFile ? 'Change Image' : 'Upload Image'}
+                        {imageFile ? 'Change Thumbnail' : 'Upload Thumbnail'}
                       </label>
                     </div>
                     
                     <div className="text-xs text-gray-500">
-                      Or enter image URL manually:
+                      Or enter thumbnail URL manually:
                     </div>
                     
                     <input
                       type="url"
-                      placeholder="https://example.com/image.jpg"
+                      placeholder="https://example.com/thumbnail.jpg"
                       value={formData.image_url}
                       onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -591,7 +694,93 @@ const TemplatesManagement = () => {
                   </div>
                   
                   <p className="text-xs text-gray-500 mt-2">
-                    Supported formats: JPG, PNG, WebP. Max size: 5MB. Recommended: 800x600px
+                    Thumbnail for template cards. Recommended: 400x300px
+                  </p>
+                </div>
+
+                {/* Gallery Images Upload Section */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Gallery Images (up to 4 images)
+                  </label>
+                  
+                  {/* Existing Images Display */}
+                  {formData.images && formData.images.length > 0 && (
+                    <div className="mb-4">
+                      <div className="text-sm text-gray-600 mb-2">Current images:</div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {formData.images.map((imageUrl, index) => (
+                          <div key={index} className="relative">
+                            <Image
+                              src={imageUrl}
+                              alt={`Gallery image ${index + 1}`}
+                              width={100}
+                              height={100}
+                              className="w-24 h-24 object-cover rounded-lg border border-gray-300"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeExistingImage(index)}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* New Images Preview */}
+                  {imagePreviews.length > 0 && (
+                    <div className="mb-4">
+                      <div className="text-sm text-gray-600 mb-2">New images to upload:</div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {imagePreviews.map((preview, index) => (
+                          <div key={index} className="relative">
+                            <Image
+                              src={preview}
+                              alt={`New image ${index + 1}`}
+                              width={100}
+                              height={100}
+                              className="w-24 h-24 object-cover rounded-lg border border-gray-300"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImageFromGallery(index)}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Gallery Upload Controls */}
+                  <div className="space-y-3">
+                    <div>
+                      <input
+                        type="file"
+                        id="gallery-upload"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImagesChange}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="gallery-upload"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer transition-colors"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        {imageFiles.length > 0 ? `Change Images (${imageFiles.length})` : 'Upload Gallery Images'}
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <p className="text-xs text-gray-500 mt-2">
+                    Upload up to 4 images for the template gallery. Supported formats: JPG, PNG, WebP. Max size: 5MB each. Recommended: 800x600px
                   </p>
                 </div>
                 <div>
