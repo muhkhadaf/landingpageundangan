@@ -3,6 +3,7 @@
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Edit, Plus, Save, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ToastContainer';
 
 interface ServiceCTA {
   id: number;
@@ -20,6 +21,7 @@ interface ServiceCTA {
 }
 
 const ServiceCTAAdmin = () => {
+  const { showSuccess, showError } = useToast();
   const [ctas, setCtas] = useState<ServiceCTA[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -144,8 +146,16 @@ const ServiceCTAAdmin = () => {
 
       await fetchCTAs();
       closeModal();
+      
+      if (editingCTA) {
+        showSuccess('CTA Diperbarui', 'Service CTA berhasil diperbarui.');
+      } else {
+        showSuccess('CTA Dibuat', 'Service CTA baru berhasil dibuat.');
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setSaving(false);
     }
@@ -168,8 +178,11 @@ const ServiceCTAAdmin = () => {
       }
 
       await fetchCTAs();
+      showSuccess('CTA Dihapus', 'Service CTA berhasil dihapus.');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      showError('Gagal Menghapus', errorMessage);
     }
   };
 

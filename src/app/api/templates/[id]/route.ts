@@ -64,6 +64,10 @@ export async function PUT(
         features: body.features,
         preview_link: body.preview_link,
         is_active: body.is_active,
+        discount_percentage: body.discount_percentage,
+        discount_start_date: body.discount_start_date,
+        discount_end_date: body.discount_end_date,
+        is_discount_active: body.is_discount_active,
         updated_at: new Date().toISOString()
       })
       .eq('id', id)

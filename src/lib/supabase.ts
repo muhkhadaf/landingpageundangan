@@ -41,6 +41,10 @@ export interface Template {
   is_active: boolean
   created_at: string
   updated_at: string
+  discount_percentage?: number
+  discount_start_date?: string
+  discount_end_date?: string
+  is_discount_active?: boolean
 }
 
 export interface Hantaran {

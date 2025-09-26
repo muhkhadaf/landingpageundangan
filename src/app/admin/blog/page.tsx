@@ -16,8 +16,10 @@ import {
   extractImagePath,
   type BlogPost
 } from '@/lib/blog-storage';
+import { useToast } from '@/components/ToastContainer';
 
 const BlogManagement = () => {
+  const { showSuccess, showError } = useToast();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -75,8 +77,15 @@ const BlogManagement = () => {
       setPosts(posts.map(p => 
         p.id === post.id ? updatedPost : p
       ));
+      
+      if (updatedPost.is_published) {
+        showSuccess('Blog Dipublikasikan', 'Blog berhasil dipublikasikan.');
+      } else {
+        showSuccess('Blog Disembunyikan', 'Blog berhasil disembunyikan.');
+      }
     } catch (error) {
       console.error('Error updating post status:', error);
+      showError('Gagal Mengubah Status', 'Terjadi kesalahan saat mengubah status blog.');
     } finally {
       setActionLoading(null);
     }
@@ -118,15 +127,19 @@ const BlogManagement = () => {
         setPosts(posts.map(p => 
           p.id === editingPost.id ? updatedPost : p
         ));
+        showSuccess('Blog Diperbarui', 'Blog berhasil diperbarui.');
       } else {
         // Create new post
         const newPost = await createBlog(blogData);
         setPosts([newPost, ...posts]);
+        showSuccess('Blog Dibuat', 'Blog baru berhasil dibuat.');
       }
       
       resetForm();
     } catch (error) {
       console.error('Error saving post:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan saat menyimpan blog';
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setActionLoading(null);
       setUploadingImage(false);
@@ -199,8 +212,11 @@ const BlogManagement = () => {
         }
         
         setPosts(posts.filter(p => p.id !== id));
+        showSuccess('Blog Dihapus', 'Blog berhasil dihapus.');
       } catch (error) {
         console.error('Error deleting post:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan saat menghapus blog';
+        showError('Gagal Menghapus', errorMessage);
       } finally {
         setActionLoading(null);
       }

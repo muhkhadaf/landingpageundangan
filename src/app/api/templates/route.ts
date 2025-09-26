@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = createSupabaseAdmin()
     const body = await request.json()
-    const { title, category, price, description, image_url, images, features, preview_link } = body
+    const { title, category, price, description, image_url, images, features, preview_link, discount_percentage, discount_start_date, discount_end_date, is_discount_active } = body
 
     // Validation
     if (!title || !category || !price) {
@@ -105,7 +105,11 @@ export async function POST(request: NextRequest) {
         image_url,
         images: images || [],
         features: features || [],
-        preview_link
+        preview_link,
+        discount_percentage,
+        discount_start_date,
+        discount_end_date,
+        is_discount_active
       })
       .select()
       .single()

@@ -13,8 +13,10 @@ import {
   createImagePreview, 
   cleanupImagePreview 
 } from '@/lib/supabase-storage';
+import { useToast } from '@/components/ToastContainer';
 
 const TemplatesManagement = () => {
+  const { showSuccess, showError } = useToast();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -32,7 +34,11 @@ const TemplatesManagement = () => {
     images: [] as string[],
     features: [] as string[],
     preview_link: '',
-    is_active: true
+    is_active: true,
+    discount_percentage: 0,
+    discount_start_date: '',
+    discount_end_date: '',
+    is_discount_active: false
   });
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -69,7 +75,7 @@ const TemplatesManagement = () => {
         for (const file of imageFiles) {
           const uploadedUrl = await uploadTemplateImage(file);
           if (!uploadedUrl) {
-            alert('Failed to upload one or more images. Please try again.');
+            showError('Upload Gagal', 'Gagal mengupload satu atau lebih gambar. Silakan coba lagi.');
             return;
           }
           finalImages.push(uploadedUrl); // Add new images to existing ones
@@ -81,7 +87,7 @@ const TemplatesManagement = () => {
         setUploadingImage(true);
         const uploadedUrl = await uploadTemplateImage(imageFile);
         if (!uploadedUrl) {
-          alert('Failed to upload thumbnail image. Please try again.');
+          showError('Upload Gagal', 'Gagal mengupload gambar thumbnail. Silakan coba lagi.');
           return;
         }
         imageUrl = uploadedUrl;
@@ -101,7 +107,11 @@ const TemplatesManagement = () => {
         images: finalImages,
         features: formData.features.filter(f => f.trim() !== ''),
         preview_link: formData.preview_link,
-        is_active: formData.is_active
+        is_active: formData.is_active,
+        discount_percentage: formData.discount_percentage,
+        discount_start_date: formData.discount_start_date || null,
+        discount_end_date: formData.discount_end_date || null,
+        is_discount_active: formData.is_discount_active
       };
 
       const url = editingTemplate 
@@ -124,9 +134,15 @@ const TemplatesManagement = () => {
       await fetchTemplates();
       setShowModal(false);
       resetForm();
+      
+      if (editingTemplate) {
+        showSuccess('Template Diperbarui', 'Template berhasil diperbarui.');
+      } else {
+        showSuccess('Template Dibuat', 'Template baru berhasil dibuat.');
+      }
     } catch (error) {
       console.error('Error saving template:', error);
-      alert('Failed to save template. Please try again.');
+      showError('Gagal Menyimpan', 'Gagal menyimpan template. Silakan coba lagi.');
     } finally {
       setActionLoading(null);
       setUploadingImage(false);
@@ -141,9 +157,13 @@ const TemplatesManagement = () => {
         });
         if (response.ok) {
           await fetchTemplates();
+          showSuccess('Template Dihapus', 'Template berhasil dihapus.');
+        } else {
+          throw new Error('Failed to delete template');
         }
       } catch (error) {
         console.error('Error deleting template:', error);
+        showError('Gagal Menghapus', 'Gagal menghapus template. Silakan coba lagi.');
       }
     }
   };
@@ -162,9 +182,14 @@ const TemplatesManagement = () => {
       });
       if (response.ok) {
         await fetchTemplates();
+        const statusText = !template.is_active ? 'diaktifkan' : 'dinonaktifkan';
+        showSuccess('Status Diperbarui', `Template berhasil ${statusText}.`);
+      } else {
+        throw new Error('Failed to update template status');
       }
     } catch (error) {
       console.error('Error updating template status:', error);
+      showError('Gagal Memperbarui Status', 'Gagal memperbarui status template. Silakan coba lagi.');
     } finally {
       setActionLoading(null);
     }
@@ -180,7 +205,11 @@ const TemplatesManagement = () => {
       images: [],
       features: [],
       preview_link: '',
-      is_active: true
+      is_active: true,
+      discount_percentage: 0,
+      discount_start_date: '',
+      discount_end_date: '',
+      is_discount_active: false
     });
     setEditingTemplate(null);
     setImageFile(null);
@@ -204,7 +233,11 @@ const TemplatesManagement = () => {
       images: template.images || [],
       features: template.features || [],
       preview_link: template.preview_link || '',
-      is_active: template.is_active
+      is_active: template.is_active,
+      discount_percentage: template.discount_percentage || 0,
+      discount_start_date: template.discount_start_date || '',
+      discount_end_date: template.discount_end_date || '',
+      is_discount_active: template.is_discount_active || false
     });
     setImageFile(null);
     setImageFiles([]);
@@ -836,6 +869,84 @@ const TemplatesManagement = () => {
                   <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">
                     Active
                   </label>
+                </div>
+
+                {/* Discount Section */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Discount Settings</h3>
+                  
+                  <div className="flex items-center mb-4">
+                    <input
+                      type="checkbox"
+                      id="is_discount_active"
+                      checked={formData.is_discount_active}
+                      onChange={(e) => setFormData(prev => ({ ...prev, is_discount_active: e.target.checked }))}
+                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="is_discount_active" className="ml-2 block text-sm text-gray-900">
+                      Enable Discount
+                    </label>
+                  </div>
+
+                  {formData.is_discount_active && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Discount Percentage (%)
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={formData.discount_percentage}
+                          onChange={(e) => setFormData(prev => ({ ...prev, discount_percentage: parseInt(e.target.value) || 0 }))}
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="Enter discount percentage (0-100)"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Discount Start Date
+                          </label>
+                          <input
+                            type="datetime-local"
+                            value={formData.discount_start_date}
+                            onChange={(e) => setFormData(prev => ({ ...prev, discount_start_date: e.target.value }))}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Discount End Date
+                          </label>
+                          <input
+                            type="datetime-local"
+                            value={formData.discount_end_date}
+                            onChange={(e) => setFormData(prev => ({ ...prev, discount_end_date: e.target.value }))}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        </div>
+                      </div>
+                      
+                      {formData.discount_percentage > 0 && formData.price && (
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">Preview:</span> 
+                            <span className="line-through text-gray-500 ml-2">Rp {parseInt(formData.price).toLocaleString('id-ID')}</span>
+                            <span className="text-emerald-600 font-semibold ml-2">
+                              Rp {(parseInt(formData.price) * (1 - formData.discount_percentage / 100)).toLocaleString('id-ID')}
+                            </span>
+                            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                              -{formData.discount_percentage}%
+                            </span>
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-end space-x-4 pt-4">
                   <button

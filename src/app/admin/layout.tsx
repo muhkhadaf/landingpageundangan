@@ -1,4 +1,5 @@
 import AdminSidebar from '@/components/AdminSidebar';
+import { ToastProvider } from '@/components/ToastContainer';
 
 export default function AdminLayout({
   children,
@@ -6,8 +7,10 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AdminSidebar>
-      {children}
-    </AdminSidebar>
+    <ToastProvider>
+      <AdminSidebar>
+        {children}
+      </AdminSidebar>
+    </ToastProvider>
   );
 }

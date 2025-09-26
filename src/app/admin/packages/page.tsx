@@ -3,6 +3,7 @@
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Check, Edit, Plus, Save, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ToastContainer';
 
 interface Package {
   id: number;
@@ -25,6 +26,7 @@ interface PackageForm {
 }
 
 const PackagesAdmin = () => {
+  const { showSuccess, showError } = useToast();
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -152,7 +154,7 @@ const PackagesAdmin = () => {
       
       // Validate form
       if (!formData.name || formData.price <= 0 || formData.features.filter(f => f.trim()).length === 0) {
-        alert('Please fill in all required fields');
+        showError('Validasi Gagal', 'Mohon lengkapi semua field yang diperlukan');
         return;
       }
 
@@ -181,9 +183,15 @@ const PackagesAdmin = () => {
 
       setIsModalOpen(false);
       fetchPackages();
-      alert(editingPackage ? 'Package updated successfully!' : 'Package created successfully!');
+      
+      if (editingPackage) {
+        showSuccess('Paket Diperbarui', 'Paket berhasil diperbarui.');
+      } else {
+        showSuccess('Paket Dibuat', 'Paket baru berhasil dibuat.');
+      }
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to save package');
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menyimpan paket';
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setSaving(false);
     }
@@ -198,9 +206,10 @@ const PackagesAdmin = () => {
       if (!response.ok) throw new Error('Failed to delete package');
       
       fetchPackages();
-      alert('Package deleted successfully!');
+      showSuccess('Paket Dihapus', 'Paket berhasil dihapus.');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete package');
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menghapus paket';
+      showError('Gagal Menghapus', errorMessage);
     }
   };
 

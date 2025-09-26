@@ -17,6 +17,10 @@ interface Template {
   created_at?: string;
   updated_at?: string;
   packages?: Package[];
+  discount_percentage?: number;
+  discount_start_date?: string;
+  discount_end_date?: string;
+  is_discount_active?: boolean;
 }
 
 interface Package {
@@ -201,14 +205,45 @@ const TemplateSection = () => {
               {/* Template Info */}
               <div className="p-3 sm:p-4 md:p-5 lg:p-6">
                 <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1 sm:mb-2" style={{color: '#52303f'}}>{template.title}</h3>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 md:mb-4" style={{color: '#d4af37'}}>
+                
+                {/* Price Section with Discount */}
+                <div className="mb-2 sm:mb-3 md:mb-4">
                   {(() => {
                     const numericPrice = typeof template.price === 'number' 
                       ? template.price 
                       : parseInt(template.price.toString().replace(/[^0-9]/g, '')) || 0;
-                    return `Rp ${numericPrice.toLocaleString('id-ID')}`;
+                    
+                    // Check if discount is active and valid
+                    const isDiscountActive = template.is_discount_active && 
+                      template.discount_percentage && 
+                      template.discount_percentage > 0;
+                    
+                    const discountedPrice = isDiscountActive 
+                      ? numericPrice * (1 - template.discount_percentage! / 100)
+                      : numericPrice;
+
+                    return (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {isDiscountActive && (
+                          <>
+                            {/* Discount Label */}
+                            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                              -{template.discount_percentage}%
+                            </span>
+                            {/* Original Price (crossed out) */}
+                            <span className="text-gray-500 line-through text-sm">
+                              Rp {numericPrice.toLocaleString('id-ID')}
+                            </span>
+                          </>
+                        )}
+                        {/* Current/Discounted Price */}
+                        <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold" style={{color: '#d4af37'}}>
+                          Rp {Math.round(discountedPrice).toLocaleString('id-ID')}
+                        </span>
+                      </div>
+                    );
                   })()}
-                </p>
+                </div>
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2 sm:gap-3">

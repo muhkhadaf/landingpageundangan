@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Plus, Edit, Trash2, Save, X, ArrowLeft } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useToast } from '@/components/ToastContainer';
 
 interface Package {
   id: number;
@@ -39,6 +40,7 @@ const TemplatePackagesAdmin = () => {
   const router = useRouter();
   const templateId = parseInt(params.id as string);
   
+  const { showSuccess, showError } = useToast();
   const [template, setTemplate] = useState<Template | null>(null);
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
@@ -201,8 +203,15 @@ const TemplatePackagesAdmin = () => {
 
       await fetchPackages();
       closeModal();
+      
+      if (editingPackage) {
+        showSuccess('Paket Diperbarui', 'Paket template berhasil diperbarui.');
+      } else {
+        showSuccess('Paket Dibuat', 'Paket template baru berhasil dibuat.');
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save package');
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menyimpan paket';
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setSaving(false);
     }
@@ -222,8 +231,10 @@ const TemplatePackagesAdmin = () => {
       }
 
       await fetchPackages();
+      showSuccess('Paket Dihapus', 'Paket template berhasil dihapus.');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete package');
+      const errorMessage = err instanceof Error ? err.message : 'Gagal menghapus paket';
+      showError('Gagal Menghapus', errorMessage);
     }
   };
 

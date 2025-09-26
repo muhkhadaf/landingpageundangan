@@ -4,6 +4,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { cleanupImagePreview, createImagePreview, deleteTestimonialImage, uploadTestimonialImage, validateTestimonialImageFile } from '@/lib/testimonial-storage';
 import { Edit, Heart, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ToastContainer';
 
 interface Testimonial {
   id: number;
@@ -17,6 +18,7 @@ interface Testimonial {
 }
 
 const TestimonialsAdmin = () => {
+  const { showSuccess, showError } = useToast();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -139,9 +141,17 @@ const TestimonialsAdmin = () => {
       await fetchTestimonials();
       setIsModalOpen(false);
       resetForm();
+      
+      if (editingTestimonial) {
+        showSuccess('Testimonial Diperbarui', 'Testimonial berhasil diperbarui.');
+      } else {
+        showSuccess('Testimonial Dibuat', 'Testimonial baru berhasil dibuat.');
+      }
     } catch (error) {
       console.error('Error saving testimonial:', error);
-      setError(error instanceof Error ? error.message : 'Failed to save testimonial');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save testimonial';
+      setError(errorMessage);
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setSaving(false);
       setUploadingImage(false);
@@ -163,9 +173,12 @@ const TestimonialsAdmin = () => {
       }
 
       await fetchTestimonials();
+      showSuccess('Testimonial Dihapus', 'Testimonial berhasil dihapus.');
     } catch (error) {
       console.error('Error deleting testimonial:', error);
-      setError(error instanceof Error ? error.message : 'Failed to delete testimonial');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete testimonial';
+      setError(errorMessage);
+      showError('Gagal Menghapus', errorMessage);
     }
   };
 

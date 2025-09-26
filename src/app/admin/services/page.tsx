@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Edit, Plus, Save, Trash2, X, Package, Gift, Mail } from 'lucide-react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useToast } from '@/components/ToastContainer';
 
 interface Service {
   id: number;
@@ -19,6 +20,7 @@ interface Service {
 }
 
 const ServicesAdmin = () => {
+  const { showSuccess, showError } = useToast();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,9 +93,17 @@ const ServicesAdmin = () => {
 
       await fetchServices();
       handleCloseModal();
+      
+      if (editingService) {
+        showSuccess('Service Diperbarui', 'Service berhasil diperbarui.');
+      } else {
+        showSuccess('Service Dibuat', 'Service baru berhasil dibuat.');
+      }
     } catch (error) {
       console.error('Error saving service:', error);
-      setError(error instanceof Error ? error.message : 'Failed to save service');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save service';
+      setError(errorMessage);
+      showError('Gagal Menyimpan', errorMessage);
     } finally {
       setSaving(false);
     }
@@ -114,9 +124,12 @@ const ServicesAdmin = () => {
       }
 
       await fetchServices();
+      showSuccess('Service Dihapus', 'Service berhasil dihapus.');
     } catch (error) {
       console.error('Error deleting service:', error);
-      setError(error instanceof Error ? error.message : 'Failed to delete service');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete service';
+      setError(errorMessage);
+      showError('Gagal Menghapus', errorMessage);
     }
   };
 
