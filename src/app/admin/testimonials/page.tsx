@@ -5,6 +5,7 @@ import { cleanupImagePreview, createImagePreview, deleteTestimonialImage, upload
 import { Edit, Heart, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/components/ToastContainer';
+import Image from 'next/image';
 
 interface Testimonial {
   id: number;
@@ -254,9 +255,11 @@ const TestimonialsAdmin = () => {
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 {testimonial.photo_url ? (
-                  <img 
+                  <Image 
                     src={testimonial.photo_url} 
                     alt={testimonial.customer_name}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 object-cover rounded-lg border"
                   />
                 ) : (
@@ -371,9 +374,11 @@ const TestimonialsAdmin = () => {
                 {/* Image Preview */}
                 {imagePreview && (
                   <div className="mb-3">
-                    <img 
+                    <Image 
                       src={imagePreview} 
                       alt="Preview" 
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-lg border"
                     />
                   </div>

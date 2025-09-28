@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calendar, User, Eye, ArrowRight } from 'lucide-react';
+import { ArrowRight, Calendar, Eye, User } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface BlogPost {
   id: number;

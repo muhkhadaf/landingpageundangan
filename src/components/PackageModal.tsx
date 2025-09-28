@@ -2,6 +2,7 @@
 
 import { X, Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Package {
   id: number;
@@ -105,9 +106,11 @@ const PackageModal: React.FC<PackageModalProps> = ({
             <div className="flex flex-col sm:flex-row gap-4">
               {template.image_url && (
                 <div className="w-full sm:w-24 h-32 sm:h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                  <img
+                  <Image
                     src={template.image_url}
                     alt={template.title}
+                    width={96}
+                    height={96}
                     className="w-full h-full object-cover"
                   />
                 </div>

@@ -121,16 +121,6 @@ const Contact = () => {
             </div>
 
           </div>
-          {/* Lottie Animation */}
-          <div data-aos="fade-left" data-aos-delay="500">
-            <div className="bg-white rounded-3xl p-8 shadow-xl flex items-center justify-center">
-              <DotLottieReact 
-                src="https://lottie.host/9dea089b-40a0-4ea0-9514-57694750cfa7/axUUNVtHFQ.lottie" 
-                loop 
-                autoplay 
-              />
-            </div>
-          </div>
         </div>
       </div>
     </section>

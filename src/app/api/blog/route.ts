@@ -37,29 +37,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
     }
 
+    const blogData = {
+      title,
+      content,
+      excerpt: excerpt || content.substring(0, 200) + '...',
+      image_url: image_url || null,
+      is_published: is_published || false,
+      author: author || 'Admin',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
     const { data: blog, error } = await supabase
       .from('blogs')
-      .insert([{
-        title,
-        content,
-        excerpt: excerpt || content.substring(0, 200) + '...',
-        image_url: image_url || null,
-        is_published: is_published || false,
-        author: author || 'Admin',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }])
+      .insert([blogData])
       .select()
       .single();
 
     if (error) {
-      console.error('Error creating blog:', error);
-      return NextResponse.json({ error: 'Failed to create blog' }, { status: 500 });
+      console.error('Supabase error creating blog:', error);
+      return NextResponse.json({ error: 'Failed to create blog', details: error }, { status: 500 });
     }
 
     return NextResponse.json({ blog }, { status: 201 });
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error in blog creation:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

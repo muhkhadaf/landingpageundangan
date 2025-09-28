@@ -1,6 +1,7 @@
 'use client';
 
 import { Facebook, Heart, Instagram, Mail, MapPin, MessageCircle, Phone, Twitter } from 'lucide-react';
+import Image from 'next/image';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -32,13 +33,10 @@ const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-1" data-aos="fade-up" data-aos-delay="100">
             <div className="flex items-center space-x-2 mb-6">
-              <Heart className="h-8 w-8" fill="currentColor" style={{color: '#d4af37'}} />
-              <span className="text-2xl font-bold bg-clip-text text-transparent" style={{background: 'linear-gradient(to right, #d4af37, #f4e4a6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
-                Nanda Invitation
-              </span>
+              <Image src="/logo.png" alt="Logo" width={1000} height={500} className="h-12 w-48" />
             </div>
             <p className="leading-relaxed mb-6" style={{color: '#f3f0f2'}}>
-              Undangan Digital Wedding vendor terpercaya yang menghadirkan undangan dan hantaran pernikahan 
+              Undangan Digital Wedding vendor terpercaya yang menghadirkan undangan pernikahan 
               berkualitas premium untuk mewujudkan hari bahagia Anda.
             </p>
             <div className="space-y-3">

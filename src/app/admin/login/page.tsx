@@ -82,7 +82,7 @@ const AdminLogin = () => {
            <div className="flex lg:hidden flex-1 bg-gradient-to-br from-purple-500 to-purple-600 items-center justify-center py-2" style={{background: 'linear-gradient(to bottom right, #7c5367, #52303f)'}}>
              <div className="w-64 h-64">
                <DotLottieReact
-                 src="https://lottie.host/0373309a-7ade-45dc-8990-5f2ddc14df85/nEHB8JNJ2B.lottie"
+                 src="https://lottie.host/9dea089b-40a0-4ea0-9514-57694750cfa7/axUUNVtHFQ.lottie"
                  loop
                  autoplay
                />
@@ -196,7 +196,7 @@ const AdminLogin = () => {
           <div className="hidden lg:flex flex-1 items-center justify-center" style={{background: 'linear-gradient(to bottom right, #7c5367, #52303f)'}}>
             <div className="w-96 h-96">
               <DotLottieReact
-                src="https://lottie.host/0373309a-7ade-45dc-8990-5f2ddc14df85/nEHB8JNJ2B.lottie"
+                src="https://lottie.host/9dea089b-40a0-4ea0-9514-57694750cfa7/axUUNVtHFQ.lottie"
                 loop
                 autoplay
               />

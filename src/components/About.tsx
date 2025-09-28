@@ -2,6 +2,7 @@
 
 import { Award, Clock, Heart, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 
 interface Testimonial {
@@ -100,7 +101,7 @@ const About = () => {
             </h3>
             <div className="space-y-6 text-gray-600 leading-relaxed">
               <p>
-                Eternal Bliss adalah wedding vendor terpercaya yang telah berpengalaman lebih dari 5 tahun 
+                Nanda Invitation adalah wedding vendor terpercaya yang telah berpengalaman lebih dari 5 tahun 
                 dalam industri pernikahan. Kami memahami bahwa setiap pasangan memiliki visi unik untuk 
                 hari bahagia mereka.
               </p>
@@ -179,9 +180,11 @@ const About = () => {
                 <div key={`first-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
                   <div className="flex items-center mb-4">
                     {testimonial.photo_url ? (
-                      <img 
+                      <Image 
                         src={testimonial.photo_url} 
                         alt={testimonial.customer_name}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                         onError={(e) => {
                           // Fallback to Heart icon if image fails to load
@@ -211,9 +214,11 @@ const About = () => {
                 <div key={`second-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
                   <div className="flex items-center mb-4">
                     {testimonial.photo_url ? (
-                      <img 
+                      <Image 
                         src={testimonial.photo_url} 
                         alt={testimonial.customer_name}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                         onError={(e) => {
                           // Fallback to Heart icon if image fails to load
@@ -243,9 +248,11 @@ const About = () => {
                 <div key={`third-${testimonial.id}`} className="flex-shrink-0 bg-white rounded-2xl p-6 shadow-lg w-80">
                   <div className="flex items-center mb-4">
                     {testimonial.photo_url ? (
-                      <img 
+                      <Image 
                         src={testimonial.photo_url} 
                         alt={testimonial.customer_name}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                         onError={(e) => {
                           // Fallback to Heart icon if image fails to load

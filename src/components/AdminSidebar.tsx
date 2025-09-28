@@ -4,12 +4,12 @@ import {
     ChevronLeft,
     ChevronRight,
     FileText,
-    Gift,
     LayoutDashboard,
     LogOut,
     Menu,
     Package,
     Star,
+    Users,
     X
 } from 'lucide-react';
 import Link from 'next/link';
@@ -25,6 +25,11 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
 
+  // Don't render sidebar on login page
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
   const menuItems = [
     {
       href: '/admin',
@@ -39,27 +44,9 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
       exact: false
     },
     {
-      href: '/admin/packages',
-      icon: Gift,
-      label: 'Packages',
-      exact: false
-    },
-    {
-      href: '/admin/hantaran',
-      icon: Gift,
-      label: 'Hantaran',
-      exact: false
-    },
-    {
       href: '/admin/services',
       icon: Package,
       label: 'Services',
-      exact: false
-    },
-    {
-      href: '/admin/service-cta',
-      icon: FileText,
-      label: 'Service CTA',
       exact: false
     },
     {
@@ -72,6 +59,12 @@ const AdminSidebar = ({ children }: AdminSidebarProps) => {
       href: '/admin/blog',
       icon: FileText,
       label: 'Blog',
+      exact: false
+    },
+    {
+      href: '/admin/admins',
+      icon: Users,
+      label: 'Admin Management',
       exact: false
     }
   ];

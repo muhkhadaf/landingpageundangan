@@ -14,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Eternal Bliss - Wedding Vendor Terpercaya | Undangan & Hantaran Pernikahan",
-  description: "Wedding vendor terpercaya dengan layanan undangan dan hantaran pernikahan berkualitas premium. Wujudkan pernikahan impian Anda bersama Eternal Bliss.",
-  keywords: "wedding vendor, undangan pernikahan, hantaran pernikahan, wedding invitation, wedding gift, pernikahan, nikah",
-  authors: [{ name: "Eternal Bliss Wedding Vendor" }],
+  title: "Nanda Invitation - Undangan Pernikahan Digital",
+  description: "Nanda Invitation menyediakan undangan pernikahan digital elegan untuk momen spesial Anda. Desain custom sesuai tema impian.",
+  keywords: "undangan pernikahan, wedding invitation, undangan digital, nanda invitation, pernikahan",
+  authors: [{ name: "Nanda Invitation" }],
   openGraph: {
-    title: "Eternal Bliss - Wedding Vendor Terpercaya",
-    description: "Layanan undangan dan hantaran pernikahan berkualitas premium untuk mewujudkan hari bahagia Anda.",
+    title: "Nanda Invitation - Undangan Pernikahan Digital",
+    description: "Desain undangan pernikahan digital custom elegan untuk momen spesial Anda bersama Nanda Invitation.",
     type: "website",
   },
 };
