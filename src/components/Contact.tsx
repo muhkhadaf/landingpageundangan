@@ -31,7 +31,7 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Telepon",
-      info: "+62 812-3456-7890",
+      info: "+62 823-1866-0900",
       subInfo: "Senin - Sabtu, 09:00 - 18:00",
       color: "emerald"
     },
@@ -109,14 +109,18 @@ const Contact = () => {
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-gray-800 mb-4">Hubungi Langsung</h4>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}>
-                  <Phone className="h-5 w-5 mr-2" />
-                  Telepon Sekarang
-                </button>
-                <button className="flex-1 bg-gradient-to-r from-green-500 to-green-400 text-white px-6 py-3 rounded-full font-semibold hover:from-green-600 hover:to-green-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center">
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  WhatsApp
-                </button>
+                <a href="tel:+6282318660900" className="flex-1">
+                  <button className="w-full text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{background: 'linear-gradient(to right, #7c5367, #52303f)'}} onMouseEnter={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #52303f, #3d1f2a)';}} onMouseLeave={(e) => {const target = e.target as HTMLButtonElement; target.style.background = 'linear-gradient(to right, #7c5367, #52303f)';}}>
+                    <Phone className="h-5 w-5 mr-2" />
+                    Telepon Sekarang
+                  </button>
+                </a>
+                <a href="https://wa.me/6282318660900" target="_blank" rel="noopener noreferrer" className="flex-1">
+                  <button className="w-full bg-gradient-to-r from-green-500 to-green-400 text-white px-6 py-3 rounded-full font-semibold hover:from-green-600 hover:to-green-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 mr-2" />
+                    WhatsApp
+                  </button>
+                </a>
               </div>
             </div>
 
