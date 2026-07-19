@@ -52,6 +52,9 @@ const Header = () => {
             <Link href="/#contact" className="transition-colors duration-300 font-medium" style={{color: '#d4af37'}} onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = '#d1c7cc'} onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = '#d4af37'}>
               Kontak
             </Link>
+            <Link href={process.env.NEXT_PUBLIC_PHP_API_URL || 'https://undangan.nandainvitation.com'} target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 font-medium" style={{color: '#d4af37'}} onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = '#d1c7cc'} onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = '#d4af37'}>
+              Login Panel
+            </Link>
           </nav>
 
           {/* CTA Button */}
@@ -144,6 +147,16 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Kontak
+              </Link>
+              <Link 
+                href={process.env.NEXT_PUBLIC_PHP_API_URL || 'https://undangan.nandainvitation.com'}
+                target="_blank" rel="noopener noreferrer"
+                className="transition-colors duration-300 font-medium text-lg py-3 px-2 rounded-lg hover:bg-white hover:bg-opacity-10" 
+                onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = '#d1c7cc'} 
+                onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = 'white'}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Login Panel
               </Link>
               <button 
                 className="px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg mt-3 w-fit mx-2" 
