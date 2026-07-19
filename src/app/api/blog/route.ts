@@ -1,67 +1,37 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server'
+import { getPhpApiUrl, formatImageUrl } from '@/lib/api-config'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-// GET - Fetch all blog posts
+// GET - Fetch all blog posts from PHP API
 export async function GET() {
   try {
-    const { data: blogs, error } = await supabase
-      .from('blogs')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const phpUrl = getPhpApiUrl('landing_blogs.php')
 
-    if (error) {
-      console.error('Error fetching blogs:', error);
-      return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 });
+    const response = await fetch(phpUrl, { cache: 'no-store' })
+    
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: 'Failed to fetch blogs' },
+        { status: response.status }
+      )
     }
 
-    return NextResponse.json({ blogs });
+    const result = await response.json()
+    const blogs = result.blogs || []
+
+    const transformedBlogs = blogs.map((b: any) => ({
+      ...b,
+      image_url: formatImageUrl(b.image_url)
+    }))
+
+    return NextResponse.json({
+      blogs: transformedBlogs
+    })
+
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-// POST - Create new blog post
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { title, content, excerpt, image_url, is_published, author } = body;
-
-    // Validate required fields
-    if (!title || !content) {
-      return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
-    }
-
-    const blogData = {
-      title,
-      content,
-      excerpt: excerpt || content.substring(0, 200) + '...',
-      image_url: image_url || null,
-      is_published: is_published || false,
-      author: author || 'Admin',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: blog, error } = await supabase
-      .from('blogs')
-      .insert([blogData])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Supabase error creating blog:', error);
-      return NextResponse.json({ error: 'Failed to create blog', details: error }, { status: 500 });
-    }
-
-    return NextResponse.json({ blog }, { status: 201 });
-  } catch (error) {
-    console.error('Unexpected error in blog creation:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error in GET /api/blog:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

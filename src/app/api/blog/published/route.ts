@@ -1,29 +1,37 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server'
+import { getPhpApiUrl, formatImageUrl } from '@/lib/api-config'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-// GET - Fetch only published blog posts for public display
+// GET - Fetch only published blog posts for public display from PHP API
 export async function GET() {
   try {
-    const { data: blogs, error } = await supabase
-      .from('blogs')
-      .select('*')
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .limit(6); // Limit to 6 posts for homepage
+    const phpUrl = `${getPhpApiUrl('landing_blogs.php')}?is_published=true&limit=6`
 
-    if (error) {
-      console.error('Error fetching published blogs:', error);
-      return NextResponse.json({ error: 'Failed to fetch published blogs' }, { status: 500 });
+    const response = await fetch(phpUrl, { cache: 'no-store' })
+    
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: 'Failed to fetch published blogs' },
+        { status: response.status }
+      )
     }
 
-    return NextResponse.json({ blogs });
+    const result = await response.json()
+    const blogs = result.blogs || []
+
+    const transformedBlogs = blogs.map((b: any) => ({
+      ...b,
+      image_url: formatImageUrl(b.image_url)
+    }))
+
+    return NextResponse.json({
+      blogs: transformedBlogs
+    })
+
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error in GET /api/blog/published:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }
